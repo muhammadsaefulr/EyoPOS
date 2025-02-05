@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EyoPOS
 
-## Getting Started
+EyoPOS adalah aplikasi **Point of Sales (POS)** yang berfungsi untuk mencatat data penjualan dan mengelola katalog barang yang tersedia. EyoPOS dirancang menggunakan **Next.js** sebagai frontend dan **PostgreSQL** sebagai database utamanya.
 
-First, run the development server:
+## ✨ Fitur Utama Yang Akan Dibuat
+- **Manajemen Stok Barang**  
+  Mengelola jumlah barang yang tersedia dalam stok secara real-time.
+- **Pembuatan Invoice**  
+  Membuat dan mencetak invoice penjualan dengan mudah.
+- **Manajemen Untung Rugi**  
+  Menyediakan laporan keuntungan dan kerugian dari penjualan yang dilakukan.
+- **Katalog Barang**  
+  Menampilkan daftar barang yang tersedia di halaman katalog untuk kemudahan akses.
+- **Catatan Penjualan**  
+  Mencatat riwayat transaksi penjualan yang telah dilakukan.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🔧 Teknologi yang Digunakan
+- **Next.js** – Framework React untuk pengembangan frontend.
+- **PostgreSQL** – Database relasional yang andal dan aman.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📦 Konsep Penggunaan
+EyoPOS dapat digunakan oleh berbagai jenis bisnis, baik sebagai aplikasi umum maupun **self-hosted** di server pribadi Anda.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Cara Menginstal dan Menjalankan
+1. Clone repository:
+    ```bash
+    git clone <repository-url>
+    ```
+2. Masuk ke direktori proyek:
+    ```bash
+    cd eyopos
+    ```
+3. Install dependencies:
+    ```bash
+    npm install
+    ```
+4. Buat file `.env` dan tambahkan konfigurasi database PostgreSQL Anda.
+5. Jalankan server pengembangan:
+    ```bash
+    npm run dev
+    ```
+6. Akses website di `http://localhost:3000`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠 Kontribusi
+Kami menyambut kontribusi dari siapa saja. Jika Anda ingin berkontribusi, silakan fork repository ini dan buat pull request.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Selamat menggunakan EyoPOS! 🎉
