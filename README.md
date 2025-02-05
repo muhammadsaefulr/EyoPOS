@@ -17,6 +17,8 @@ EyoPOS adalah aplikasi **Point of Sales (POS)** yang berfungsi untuk mencatat da
 ## 🔧 Teknologi yang Digunakan
 - **Next.js** – Framework React untuk pengembangan frontend.
 - **PostgreSQL** – Database relasional yang andal dan aman.
+- **DrizzleORM** – ORM Database yang cepat.
+- **ShadcnUI/Tailwind** – Component Library Berdasar Dari RadixUI Yang Keren.
 
 ## 📦 Konsep Penggunaan
 EyoPOS dapat digunakan oleh berbagai jenis bisnis, baik sebagai aplikasi umum maupun **self-hosted** di server pribadi Anda.
@@ -24,11 +26,11 @@ EyoPOS dapat digunakan oleh berbagai jenis bisnis, baik sebagai aplikasi umum ma
 ## 🚀 Cara Menginstal dan Menjalankan
 1. Clone repository:
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/muhammadsaefulr/EyoPOS
     ```
 2. Masuk ke direktori proyek:
     ```bash
-    cd eyopos
+    cd EyoPOS
     ```
 3. Install dependencies:
     ```bash
