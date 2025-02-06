@@ -60,7 +60,7 @@ export default function Sidebar() {
   }
 
   return (
-    <>
+    <div className="z-30">
       <button
         type="button"
         className="lg:hidden fixed top-3 left-4 z-[70] p-2 rounded-lg"
@@ -99,9 +99,6 @@ export default function Sidebar() {
                   <NavItem href="/dashboard" icon={Home}>
                     Dashboard
                   </NavItem>
-                  <NavItem href="#" icon={BarChart2}>
-                    Analytics
-                  </NavItem>
                 </div>
               </div>
 
@@ -110,7 +107,7 @@ export default function Sidebar() {
                   Product
                 </div>
                 <div className="space-y-1">
-                  <NavItem href="#" icon={Package}>
+                  <NavItem href="/dashboard/produk" icon={Package}>
                     Produk Katalog
                   </NavItem>
                   <NavItem href="/dashboard/warn/next-update" tag="onUpdate" tagIcon={CircleAlert} icon={Package2}>
@@ -165,7 +162,7 @@ export default function Sidebar() {
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
-    </>
+    </div>
   )
 }
 
