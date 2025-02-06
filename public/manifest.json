@@ -1,0 +1,16 @@
+{
+    "name": "AyoPOS Point Of Sales Simple App",
+    "short_name": "AyoPOS App",
+    "icons": [
+      {
+        "src": "/vercel.svg",
+        "sizes": "512x512",
+        "type": "image/svg+xml"
+      }
+    ],
+    "theme_color": "#FFFFFF",
+    "background_color": "#FFFFFF",
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "portrait"
+  }

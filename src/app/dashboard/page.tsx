@@ -1,23 +1,27 @@
+"use client"
 import { auth, signOut } from '@/auth'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { redirect } from "next/navigation"
-import SignoutButton from '@/components/auth/BtnLogout'
+import { LoadingWithLogo } from '@/components/loading'
 
-async function Dashboard() {
-    const session = await auth()
+function Dashboard() {
 
-    if (!session?.user) {
-        redirect("/api/auth/signin?callbackUrl=/dashboard")
-      }
+  const [isLoading, setIsLoading] = useState(true);
+ 
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+  }, []);
+
+  if (isLoading) {
+    return <LoadingWithLogo />;
+  }
 
   return (
     <div>
         <div className="">
-            <p>{session.user.name}</p>
-            <SignoutButton  signOut={async () => {
-            "use server"
-            await signOut({redirectTo: "/"})
-          }} />
+            <p>Dashboard</p>
         </div>
     </div>
   )
