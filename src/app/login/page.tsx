@@ -4,16 +4,35 @@ import { signIn } from "next-auth/react";
 
 import { LoginForm } from "@/components/form/login-form"
 import { Logo } from "@/components/logo"
+import { useToast } from "@/hooks/use-toast";
+import { useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const handleGoogleSignIn = () => {
     signIn("google", { callbackUrl: "/dashboard" });
   };
+
+  const searchParams = useSearchParams()
+
+  const { toast } = useToast();
+
+  const errorParams = searchParams.get("error");
+
+  console.log(errorParams)
+
+  if(errorParams === "AccessDenied"){
+    toast({
+      title: errorParams,
+      description: "Email Kamu Tidak Terdaftar Di Database"
+    })
+  }
+
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
-          <a href="#" className="flex items-center gap-2 font-medium">
+          <a className="flex items-center gap-2 font-medium">
             <Logo/>
           </a>
         </div>

@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown, MoreHorizontal, Star } from "lucide-react"
 import { useState } from "react"
-import { ProductDrawer } from "./product-drawer"
+// import { ProductDrawer } from "./product-drawer"
 
 export const columns: ColumnDef<Product>[] = [
   {
@@ -42,7 +42,7 @@ export const columns: ColumnDef<Product>[] = [
     header: ({ column }) => {
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Product Name
+          Member Name
           <ArrowUpDown className="ml-3 h-4 w-4" />
         </Button>
       )
@@ -131,13 +131,13 @@ export const columns: ColumnDef<Product>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
           </DropdownMenuContent>
-           <ProductDrawer
+           {/* <ProductDrawer
                   isOpen={isDrawerOpen}
                   onClose={() => {
                     setIsDrawerOpen(false)
                   }}
                   product={product}
-                />
+                /> */}
         </DropdownMenu>
       )
     },

@@ -121,10 +121,10 @@ export default function Sidebar() {
                   Finance
                 </div>
                 <div className="space-y-1">
-                  <NavItem href="#" icon={Receipt}>
+                  <NavItem href="/dashboard/invoice" icon={Receipt}>
                     Invoices
                   </NavItem>
-                  <NavItem href="#" icon={ReceiptCent}>
+                  <NavItem href="/dashboard/sales/report" icon={ReceiptCent}>
                     Laporan Penjualan
                   </NavItem>
                 </div>
@@ -135,7 +135,7 @@ export default function Sidebar() {
                   User Management
                 </div>
                 <div className="space-y-1">
-                  <NavItem href="#" icon={Users2}>
+                  <NavItem href="/dashboard/member" icon={Users2}>
                     Members
                   </NavItem>
                 </div>

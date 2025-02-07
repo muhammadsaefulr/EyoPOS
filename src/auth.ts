@@ -4,6 +4,8 @@ import Google from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { DrizzleAdapter } from "@auth/drizzle-adapter"
 import { db } from "./drizzle/db"
+import { eq } from "drizzle-orm"
+import { users } from "./drizzle/schema"
 
 export const authConfig = {
   adapter: DrizzleAdapter(db),
@@ -13,8 +15,21 @@ export const authConfig = {
     
   pages: {
     signIn: '/login', 
+    error: '/login'
   },
   callbacks: {
+    async signIn({ user }) {
+
+      const existingUser = await db.query.users.findMany({
+        where: eq(users.email.table, user.email)
+      })
+
+      if (!existingUser) {
+        return false;
+      }
+
+      return true
+    },
     async session({session, user}){
       session.user.id = user.id
       return session;

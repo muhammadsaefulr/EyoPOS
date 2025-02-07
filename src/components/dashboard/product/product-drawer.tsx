@@ -60,7 +60,6 @@ function ProfileForm({ product, onSubmit }: ProfileFormProps) {
     price: 0,
     stock: 0,
     status: "in_stock",
-    rating: 0,
     createdAt: new Date().toISOString(),
   })
 
@@ -74,7 +73,6 @@ function ProfileForm({ product, onSubmit }: ProfileFormProps) {
         price: 0,
         stock: 0,
         status: "in_stock",
-        rating: 0,
         createdAt: new Date().toISOString(),
       }) 
     }
