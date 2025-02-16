@@ -12,18 +12,18 @@ interface MemberListProps {
 
 export default function MemberList({ initialMembers }: MemberListProps) {
   const [members, setMembers] = useState(initialMembers)
-  const [editingMember, setEditingMember] = useState<Member | null>(null)
-  const [isAddingMember, setIsAddingMember] = useState(false)
+  // const [editingMember, setEditingMember] = useState<Member | null>(null)
+  // const [isAddingMember, setIsAddingMember] = useState(false)
 
-  const handleAddMember = (newMember: Member) => {
-    setMembers([...members, newMember])
-    setIsAddingMember(false)
-  }
+  // const handleAddMember = (newMember: Member) => {
+  //   setMembers([...members, newMember])
+  //   setIsAddingMember(false)
+  // }
 
-  const handleUpdateMember = (updatedMember: Member) => {
-    setMembers(members.map((member) => (member.id === updatedMember.id ? updatedMember : member)))
-    setEditingMember(null)
-  }
+  // const handleUpdateMember = (updatedMember: Member) => {
+  //   setMembers(members.map((member) => (member.id === updatedMember.id ? updatedMember : member)))
+  //   setEditingMember(null)
+  // }
 
   const handleDeleteMember = async (id: string) => {
     const formData = new FormData()
@@ -56,7 +56,7 @@ export default function MemberList({ initialMembers }: MemberListProps) {
               <TableCell>{member.email}</TableCell>
               <TableCell>{member.role}</TableCell>
               <TableCell>
-                <Button variant="ghost" size="icon" onClick={() => setEditingMember(member)}>
+                <Button variant="ghost" size="icon">
                   <Pencil className="h-4 w-4" />
                 </Button>
                 <Button variant="ghost" size="icon" onClick={() => handleDeleteMember(member.id)}>

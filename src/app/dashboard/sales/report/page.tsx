@@ -116,7 +116,7 @@ export default function Component() {
   )
 }
 
-function BarChartIcon(props: any) {
+function BarChartIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -138,7 +138,7 @@ function BarChartIcon(props: any) {
 }
 
 
-function BarchartChart(props: any) {
+function BarchartChart(props: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div {...props}>
       <ChartContainer
@@ -178,7 +178,7 @@ function BarchartChart(props: any) {
 }
 
 
-function DollarSignIcon(props: any) {
+function DollarSignIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -198,7 +198,7 @@ function DollarSignIcon(props: any) {
   )
 }
 
-function PercentIcon(props: any) {
+function PercentIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -220,7 +220,7 @@ function PercentIcon(props: any) {
 }
 
 
-function ShoppingCartIcon(props: any) {
+function ShoppingCartIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -242,7 +242,7 @@ function ShoppingCartIcon(props: any) {
 }
 
 
-function TableIcon(props:any) {
+function TableIcon(props:React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

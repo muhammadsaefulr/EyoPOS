@@ -1,16 +1,8 @@
 "use client"
 
 import {
-  BarChart2,
   Receipt,
-  Building2,
-  CreditCard,
-  Folder,
-  Wallet,
   Users2,
-  Shield,
-  MessagesSquare,
-  Video,
   Settings,
   HelpCircle,
   Menu,
@@ -23,7 +15,6 @@ import {
 import { Home } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
-import Image from "next/image"
 import { Logo } from "./logo"
 
 export default function Sidebar() {
@@ -42,8 +33,8 @@ export default function Sidebar() {
   }: {
     href: string
     tag?: string
-    tagIcon?: any
-    icon: any
+    tagIcon?: any,
+    icon: React.ElementType
     children: React.ReactNode
   }) {
     return (
@@ -96,7 +87,7 @@ export default function Sidebar() {
                   Overview
                 </div>
                 <div className="space-y-1">
-                  <NavItem href="/dashboard" icon={Home}>
+                  <NavItem href="/dashboard" icon={Home}  tagIcon={null}>
                     Dashboard
                   </NavItem>
                 </div>

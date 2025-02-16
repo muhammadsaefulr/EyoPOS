@@ -1,12 +1,11 @@
 "use client"
-import { GalleryVerticalEnd } from "lucide-react"
 import { signIn } from "next-auth/react";
 
 import { LoginForm } from "@/components/form/login-form"
 import { Logo } from "@/components/logo"
 import { useToast } from "@/hooks/use-toast";
 import { useSearchParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
 
 export default function LoginPage() {
   const handleGoogleSignIn = () => {
@@ -21,12 +20,13 @@ export default function LoginPage() {
 
   console.log(errorParams)
 
-  if(errorParams === "AccessDenied"){
-    toast({
-      title: errorParams,
-      description: "Email Kamu Tidak Terdaftar Di Database"
-    })
-  }
+  useEffect(() => {
+    if(errorParams == "AccessDenied"){
+      setTimeout(() => {
+        toast({ variant: "destructive", title: "Unathorized", description: "Email Tidak Terdaftar Atau Password Salah"});
+      }, 100);
+    }
+  }, [errorParams]);
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">

@@ -1,11 +1,11 @@
 import type { NextAuthConfig } from "next-auth"
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
-import CredentialsProvider from "next-auth/providers/credentials"
+// import CredentialsProvider from "next-auth/providers/credentials"
 import { DrizzleAdapter } from "@auth/drizzle-adapter"
 import { db } from "./drizzle/db"
-import { eq } from "drizzle-orm"
 import { users } from "./drizzle/schema"
+import { eq, isNull } from "drizzle-orm"
 
 export const authConfig = {
   adapter: DrizzleAdapter(db),
@@ -20,15 +20,18 @@ export const authConfig = {
   callbacks: {
     async signIn({ user }) {
 
-      const existingUser = await db.query.users.findMany({
-        where: eq(users.email.table, user.email)
-      })
+      const existingUser = await db
+      .select()
+      .from(users)
+      .where(user.email ? eq(users.email, user.email) : isNull(users.email));
+    
+      console.log("Find User Exist",existingUser)
 
-      if (!existingUser) {
-        return false;
+      if(existingUser.length > 0){
+        return true;
       }
 
-      return true
+      return false
     },
     async session({session, user}){
       session.user.id = user.id

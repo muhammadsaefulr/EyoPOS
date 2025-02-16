@@ -9,7 +9,7 @@ export default function layout({children}: LayoutProps) {
   return (
     <main>
         <div>{children}</div>
-        <Toaster />
+        <Toaster/>
     </main>
   )
 }

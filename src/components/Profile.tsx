@@ -1,6 +1,5 @@
 "use client"
-import { signOut } from "@/auth"
-import { LogOut, MoveUpRight, Settings, CreditCard, FileText } from "lucide-react"
+import { MoveUpRight, Settings, FileText } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import BtnLogout from "./auth/BtnLogout"

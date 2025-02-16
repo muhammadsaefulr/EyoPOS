@@ -6,20 +6,20 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import type { Product } from "@/hooks/data-product"
+import type { FormDataProductType, ProductTypes } from "@/hooks/data-product"
 import { useToast } from "@/hooks/use-toast"
 
 type ProductDrawerProps = {
   isOpen: boolean
   onClose: () => void
-  product?: Product | null
+  product?: ProductTypes | null
 }
 
 export function ProductDrawer({ isOpen, onClose, product }: ProductDrawerProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const { toast } = useToast()
 
-  const handleSubmit = (productData: Omit<Product, "id"> & { id?: string }) => {
+  const handleSubmit = (productData: FormDataProductType) => {
     console.log(productData)
     toast({
       title: "Product added",
@@ -49,31 +49,40 @@ export function ProductDrawer({ isOpen, onClose, product }: ProductDrawerProps) 
 }
 
 type ProfileFormProps = {
-  product?: Product | null
-  onSubmit: (product: Omit<Product, "id"> & { id?: string }) => void
+  product?: ProductTypes | null
+  onSubmit: (product: FormDataProductType) => void;
 }
 
 function ProfileForm({ product, onSubmit }: ProfileFormProps) {
-  const [formData, setFormData] = useState<Omit<Product, "id"> & { id?: string }>({
+  const [formData, setFormData] = useState<FormDataProductType>({
     name: "",
     category: "",
     price: 0,
+    distPrice: 0,
     stock: 0,
-    status: "in_stock",
-    createdAt: new Date().toISOString(),
+    updatedBy: "",
+    addedBy: ""
   })
 
   useEffect(() => {
     if (product) {
-      setFormData(product)  
+      setFormData({
+        name: product.name,
+        category: product.category,
+        price: product.price,
+        distPrice: product.distPrice,
+        stock: product.stock,
+        addedBy: product.addedBy,
+        updatedBy: product.updatedBy
+      })  
     } else {
       setFormData({
         name: "",
         category: "",
         price: 0,
+        distPrice: 0,
         stock: 0,
-        status: "in_stock",
-        createdAt: new Date().toISOString(),
+        updatedBy: ""
       }) 
     }
   }, [product])
@@ -92,27 +101,47 @@ function ProfileForm({ product, onSubmit }: ProfileFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 space-y-4">
+    <form onSubmit={handleSubmit} className="p-4 lg:grid lg:grid-cols-2 gap-4">
+    <div className="space-y-4">
       <div>
-        <Label htmlFor="name">Name</Label>
+        <Label htmlFor="name">Product Name</Label>
         <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
       </div>
       <div>
-        <Label htmlFor="category">Category</Label>
+        <Label htmlFor="category">Product Category</Label>
         <Input id="category" name="category" value={formData.category} onChange={handleChange} required />
       </div>
       <div>
-        <Label htmlFor="price">Price</Label>
+        <Label htmlFor="price">Product Price</Label>
         <Input id="price" name="price" type="number" value={formData.price} onChange={handleChange} required />
       </div>
       <div>
-        <Label htmlFor="stock">Stock</Label>
+        <Label htmlFor="distPrice">Product Distributor Price</Label>
+        <Input id="distPrice" name="distPrice" type="number" value={formData.distPrice} onChange={handleChange} required />
+      </div>
+    </div>
+      <div className="space-y-4">
+      <div>
+        <Label htmlFor="stock">Product Stock</Label>
         <Input id="stock" name="stock" type="number" value={formData.stock} onChange={handleChange} required />
       </div>
+      <div>
+        <Label htmlFor="addedBy">Added By</Label>
+        <Input id="addedBy" name="addedBy" value={formData.addedBy} onChange={handleChange} required />
+      </div>
+      <div>
+        <Label htmlFor="updatedBy">Updated By</Label>
+        <Input id="updatedBy" name="updatedBy" value={formData.updatedBy} onChange={handleChange} required />
+      </div>
+    </div>
+  
+    <div className="col-span-2 mt-4">
       <DrawerFooter>
         <Button type="submit">{product ? "Update" : "Add"} Product</Button>
       </DrawerFooter>
-    </form>
+    </div>
+  </form>
+  
   )
 }
 

@@ -6,12 +6,13 @@ import TopNav from "@/components/TopNav"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import ClientLayout from "./ClientLayout"
+import { db } from "@/drizzle/db"
 
 interface LayoutProps {
   children: ReactNode
 }
 
-export default async function ({ children }: LayoutProps) {
+export default async function DashboardLayout({ children }: LayoutProps) {
 
  const session = await auth()
 

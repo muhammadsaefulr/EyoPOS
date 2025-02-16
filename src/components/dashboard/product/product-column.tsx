@@ -1,7 +1,7 @@
 "use client"
 
 import type { ColumnDef } from "@tanstack/react-table"
-import type { Product } from "@/hooks/data-product"
+import type { ProductTypes } from "@/hooks/data-product"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -17,7 +17,7 @@ import { ArrowUpDown, MoreHorizontal, Star } from "lucide-react"
 import { useState } from "react"
 import { ProductDrawer } from "./product-drawer"
 
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<ProductTypes>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -47,6 +47,11 @@ export const columns: ColumnDef<Product>[] = [
         </Button>
       )
     },
+    cell: ({ row }) => {
+      const productName: string = row.getValue("name")
+
+      return <div className="mx-4">{productName}</div>
+    }
   },
   {
     accessorKey: "price",
@@ -64,7 +69,26 @@ export const columns: ColumnDef<Product>[] = [
         style: "currency",
         currency: "IDR",
       }).format(price)
-      return <div className="font-medium">{formatted}</div>
+      return <div className="font-medium mx-3">{formatted}</div>
+    },
+  },
+  {
+    accessorKey: "distPrice",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Distributor Price
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const price = Number.parseFloat(row.getValue("distPrice"))
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "IDR",
+      }).format(price)
+      return <div className="font-medium mx-4">{formatted}</div>
     },
   },
   {
@@ -82,7 +106,19 @@ export const columns: ColumnDef<Product>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.getValue("status") as string
+      
+      const stock = Number.parseInt(row.getValue('stock'))
+
+      let status: "in_stock" | "low_stock" | "out_of_stock"
+
+      if (stock <= 0) {
+        status = "out_of_stock";
+      } else if (stock <= 20) {
+        status = "low_stock";
+      } else {
+        status = "in_stock";
+      }
+
       return (
         <Badge
           className={

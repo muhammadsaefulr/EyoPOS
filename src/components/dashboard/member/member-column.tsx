@@ -115,8 +115,8 @@ export const columns: ColumnDef<Product>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const product = row.original
-      const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+      // const product = row.original
+      // const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
       return (
         <DropdownMenu>
@@ -127,7 +127,8 @@ export const columns: ColumnDef<Product>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => setIsDrawerOpen(true)}>Edit product</DropdownMenuItem>
+            {/* <DropdownMenuItem onClick={() => setIsDrawerOpen(true)}>Edit product</DropdownMenuItem> */}
+            <DropdownMenuItem>Edit product</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
           </DropdownMenuContent>

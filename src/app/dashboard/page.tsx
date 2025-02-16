@@ -1,9 +1,8 @@
 "use client"
-import { auth, signOut } from '@/auth'
-import React, { useEffect, useState } from 'react'
-import { redirect } from "next/navigation"
-import { LoadingWithLogo } from '@/components/loading'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import React from 'react'
+// import { redirect } from "next/navigation"
+// import { LoadingWithLogo } from '@/components/loading'
+// import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import CardOverview from '@/components/dashboard/overview/CardOverview'
 import RecentTransactions from '@/components/dashboard/overview/RencentTransactions'
 import ProductOverview from '@/components/dashboard/overview/ProductOverview'

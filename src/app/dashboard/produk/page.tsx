@@ -13,15 +13,15 @@ export default function ProductsPage() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const { toast } = useToast()
 
-  const handleAddProduct = (newProduct: Omit<Product, "id">) => {
-    const id = (products.length + 1).toString()
-    setProducts([...products, { ...newProduct, id }])
-    setIsDrawerOpen(false)
-    toast({
-      title: "Product added",
-      description: `${newProduct.name} has been added successfully.`,
-    })
-  }
+  // const handleAddProduct = (newProduct: Omit<Product, "id">) => {
+  //   const id = (products.length + 1).toString()
+  //   setProducts([...products, { ...newProduct, id }])
+  //   setIsDrawerOpen(false)
+  //   toast({
+  //     title: "Product added",
+  //     description: `${newProduct.name} has been added successfully.`,
+  //   })
+  // }
 
 
   return (
