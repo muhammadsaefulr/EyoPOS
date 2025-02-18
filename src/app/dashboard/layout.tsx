@@ -7,6 +7,7 @@ import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import ClientLayout from "./ClientLayout"
 import { db } from "@/drizzle/db"
+import { SessionProvider } from "next-auth/react"
 
 interface LayoutProps {
   children: ReactNode
@@ -22,6 +23,7 @@ export default async function DashboardLayout({ children }: LayoutProps) {
   
   return (
     <ClientLayout>
+    <SessionProvider session={session}>
     <div className="flex h-screen">
       <Sidebar />
       <div className="w-full flex flex-1 flex-col">
@@ -31,6 +33,7 @@ export default async function DashboardLayout({ children }: LayoutProps) {
         <main className="flex-1 overflow-auto p-4 bg-gray-100 dark:bg-[#0F0F12]">{children}</main>
       </div>
     </div>
+    </SessionProvider>
     </ClientLayout>
   )
 }

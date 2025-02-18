@@ -1,18 +1,19 @@
-import { pgTable, text, integer, numeric, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, numeric, timestamp, varchar } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
+import { productCategory } from "./product_category_schema";
 
 export const products = pgTable("products", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
 
-  name: text("name").notNull(),
+  name: varchar("name", {length: 255}).notNull(),
 
   price: numeric("price").notNull(),
 
   distPrice: numeric("dist_price").notNull(),
 
-  category: text("category").notNull(),
+  categoryId: integer("categoryId").notNull().references(() => productCategory.id, {onDelete: "cascade"}),
 
   stock: integer("stock").notNull().default(0),
 
@@ -22,7 +23,7 @@ export const products = pgTable("products", {
     .notNull()
     .default(sql`CURRENT_TIMESTAMP`),
 
-  addedBy: text("added_by").notNull(),
+  addedBy: varchar("added_by", {length:255}).notNull(),
 
-  updatedBy: text("updated_by").notNull(),
+  updatedBy: varchar("updated_by", {length:255}).notNull(),
 });

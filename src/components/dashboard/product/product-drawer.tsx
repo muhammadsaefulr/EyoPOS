@@ -1,13 +1,23 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from "@/components/ui/drawer"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import type { FormDataProductType, ProductTypes } from "@/hooks/data-product"
+import { Form, FormField, FormItem, FormControl, FormLabel, FormMessage } from "@/components/ui/form"
+import type { ProductTypes } from "@/hooks/data-product"
+import { ProductSchemaZod } from "@/hooks/data-product"
 import { useToast } from "@/hooks/use-toast"
+import { useSession } from "next-auth/react"
+import { Session } from "next-auth"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
+type ProductFormData = z.infer<typeof ProductSchemaZod>
 
 type ProductDrawerProps = {
   isOpen: boolean
@@ -18,8 +28,9 @@ type ProductDrawerProps = {
 export function ProductDrawer({ isOpen, onClose, product }: ProductDrawerProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const { toast } = useToast()
+  const { data: session } = useSession()
 
-  const handleSubmit = (productData: FormDataProductType) => {
+  const handleSubmit = (productData: ProductFormData) => {
     console.log(productData)
     toast({
       title: "Product added",
@@ -33,7 +44,7 @@ export function ProductDrawer({ isOpen, onClose, product }: ProductDrawerProps) 
         <DialogHeader>
           <DialogTitle>{product ? "Edit Product" : "Add New Product"}</DialogTitle>
         </DialogHeader>
-        <ProfileForm product={product} onSubmit={handleSubmit} />
+        <ProductForm sessions={session} product={product} onSubmit={handleSubmit} />
       </DialogContent>
     </Dialog>
   ) : (
@@ -42,118 +53,156 @@ export function ProductDrawer({ isOpen, onClose, product }: ProductDrawerProps) 
         <DrawerHeader>
           <DrawerTitle>{product ? "Edit Product" : "Add New Product"}</DrawerTitle>
         </DrawerHeader>
-        <ProfileForm product={product} onSubmit={handleSubmit} />
+        <ProductForm sessions={session} product={product} onSubmit={handleSubmit} />
       </DrawerContent>
     </Drawer>
   )
 }
 
-type ProfileFormProps = {
+type ProductFormProps = {
   product?: ProductTypes | null
-  onSubmit: (product: FormDataProductType) => void;
+  sessions: Session | null
+  onSubmit: (product: ProductFormData) => void
 }
 
-function ProfileForm({ product, onSubmit }: ProfileFormProps) {
-  const [formData, setFormData] = useState<FormDataProductType>({
-    name: "",
-    category: "",
-    price: 0,
-    distPrice: 0,
-    stock: 0,
-    updatedBy: "",
-    addedBy: ""
+function ProductForm({ product, sessions, onSubmit }: ProductFormProps) {
+  const form = useForm<ProductFormData>({
+    resolver: zodResolver(ProductSchemaZod),
+    defaultValues: {
+      name: "",
+      categoryId: 1,
+      price: 0,
+      distPrice: 0,
+      stock: 0,
+      addedBy: sessions?.user.name ?? "",
+      updatedBy: sessions?.user.name ?? "",
+    },
   })
 
   useEffect(() => {
     if (product) {
-      setFormData({
+      form.reset({
         name: product.name,
-        category: product.category,
+        categoryId: product.categoryId,
         price: product.price,
         distPrice: product.distPrice,
         stock: product.stock,
         addedBy: product.addedBy,
-        updatedBy: product.updatedBy
-      })  
-    } else {
-      setFormData({
-        name: "",
-        category: "",
-        price: 0,
-        distPrice: 0,
-        stock: 0,
-        updatedBy: ""
-      }) 
+        updatedBy: sessions?.user.name ?? "",
+      })
     }
-  }, [product])
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === "price" || name === "stock" || name === "rating" ? Number(value) : value,
-    }))
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSubmit(formData)
-  }
+  }, [product, form, sessions])
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 lg:grid lg:grid-cols-2 gap-4">
-    <div className="space-y-4">
-      <div>
-        <Label htmlFor="name">Product Name</Label>
-        <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
-      </div>
-      <div>
-        <Label htmlFor="category">Product Category</Label>
-        <Input id="category" name="category" value={formData.category} onChange={handleChange} required />
-      </div>
-      <div>
-        <Label htmlFor="price">Product Price</Label>
-        <Input id="price" name="price" type="number" value={formData.price} onChange={handleChange} required />
-      </div>
-      <div>
-        <Label htmlFor="distPrice">Product Distributor Price</Label>
-        <Input id="distPrice" name="distPrice" type="number" value={formData.distPrice} onChange={handleChange} required />
-      </div>
-    </div>
-      <div className="space-y-4">
-      <div>
-        <Label htmlFor="stock">Product Stock</Label>
-        <Input id="stock" name="stock" type="number" value={formData.stock} onChange={handleChange} required />
-      </div>
-      <div>
-        <Label htmlFor="addedBy">Added By</Label>
-        <Input id="addedBy" name="addedBy" value={formData.addedBy} onChange={handleChange} required />
-      </div>
-      <div>
-        <Label htmlFor="updatedBy">Updated By</Label>
-        <Input id="updatedBy" name="updatedBy" value={formData.updatedBy} onChange={handleChange} required />
-      </div>
-    </div>
-  
-    <div className="col-span-2 mt-4">
-      <DrawerFooter>
-        <Button type="submit">{product ? "Update" : "Add"} Product</Button>
-      </DrawerFooter>
-    </div>
-  </form>
-  
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="p-4 lg:grid lg:grid-cols-2 gap-4">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Product Name</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+           <FormField
+          control={form.control}
+          name="categoryId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Product Category</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
+                <SelectTrigger >
+                  <SelectValue placeholder="Pilih Kategori Produk"/>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">Category 1</SelectItem>
+                  <SelectItem value="2">Category 2</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="price"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Product Price</FormLabel>
+              <FormControl>
+                <Input type="number" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="distPrice"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Product Distributor Price</FormLabel>
+              <FormControl>
+                <Input type="number" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="stock"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Product Stock</FormLabel>
+              <FormControl>
+                <Input type="number" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+         <FormField
+          control={form.control}
+          name="addedBy"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Added By</FormLabel>
+              <FormControl>
+                <Input {...field} disabled />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="updatedBy"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Updated By</FormLabel>
+              <FormControl>
+                <Input {...field} disabled />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <Button type="submit" className="col-span-2 mt-4">{product ? "Update" : "Add"} Product</Button>
+      </form>
+    </Form>
   )
 }
 
 function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(false)
-
   useEffect(() => {
     const media = window.matchMedia(query)
     const listener = () => setMatches(media.matches)
-
     setMatches(media.matches)
-
     media.addEventListener("change", listener)
     return () => media.removeEventListener("change", listener)
   }, [query])

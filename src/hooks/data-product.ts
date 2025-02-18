@@ -1,9 +1,11 @@
+import { z } from "zod"
+
 export type ProductTypes = {
     id?: string
     name: string
     price: number
     distPrice: number
-    category: string
+    categoryId: number
     stock: number
     sold: number
     createdAt: string
@@ -23,6 +25,16 @@ export type ProductTypes = {
     addedBy?: string
     updatedBy?: string
   }
+
+  export const ProductSchemaZod = z.object({
+    name: z.string().min(1, "Product name is required"),
+    categoryId: z.number(),
+    price: z.number().min(0, "Price must be a positive number"),
+    distPrice: z.number().min(0, "Distributor price must be a positive number"),
+    stock: z.number().min(0, "Stock must be a positive number"),
+    addedBy: z.string().optional(),
+    updatedBy: z.string().optional(),
+  })
   
   export const productsInit: ProductTypes[] = [
     {
@@ -30,7 +42,7 @@ export type ProductTypes = {
       name: "Wireless Earbuds Pro",
       price: 62000,
       distPrice: 50000,
-      category: "Electronics",
+      categoryId: 1,
       // status: "in_stock",
       stock: 20,
       sold: 6,
@@ -41,7 +53,7 @@ export type ProductTypes = {
       name: "Charger Robot T20",
       price: 90000,
       distPrice: 82000,
-      category: "Electronics",
+      categoryId: 1,
       // status: "low_stock",
       stock: 45,
       sold: 6,
