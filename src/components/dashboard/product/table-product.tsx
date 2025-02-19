@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import CategoryProductDrawer from "./drawer-category"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -56,49 +57,51 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 
   return (
     <div>
-      <div className="flex flex-col gap-4 py-4 md:flex-row md:items-center">
+      <div className="flex flex-col gap-4 py-4 md:flex-row md:items-center md:justify-between">
+        {/* Input Filter */}
         <Input
           placeholder="Filter products..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
-          className="max-w-sm"
+          className="w-full md:max-w-sm"
         />
-        <div className="ml-auto flex items-center gap-2">
+
+        {/* Bagian Kanan */}
+        <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-2 w-full md:w-auto">
+          <CategoryProductDrawer />
+
+          {/* Select untuk kategori */}
           <Select
-            value={(table.getColumn("category")?.getFilterValue() as string) ?? ""}
-            onValueChange={(value: unknown) => table.getColumn("category")?.setFilterValue(value)}
+            value={(table.getColumn("categoryId")?.getFilterValue() as string) ?? ""}
+            onValueChange={(value: unknown) => table.getColumn("categoryId")?.setFilterValue(value)}
           >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full md:w-[180px]">
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="Electronics">Electronics</SelectItem>
-              <SelectItem value="Apparel">Apparel</SelectItem>
-              <SelectItem value="Home & Kitchen">Home & Kitchen</SelectItem>
-              <SelectItem value="Sports">Sports</SelectItem>
             </SelectContent>
           </Select>
+
+          {/* Dropdown Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">View</Button>
+              <Button variant="outline" className="w-full flex justify-start md:w-auto">View</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {table
                 .getAllColumns()
                 .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  )
-                })}
+                .map((column) => (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

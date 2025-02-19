@@ -7,7 +7,6 @@ import * as z from "zod"
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from "@/components/ui/drawer"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Form, FormField, FormItem, FormControl, FormLabel, FormMessage } from "@/components/ui/form"
 import type { ProductTypes } from "@/hooks/data-product"
@@ -16,6 +15,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useSession } from "next-auth/react"
 import { Session } from "next-auth"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useGetAllCategoryProductQuery } from "@/lib/reactquery/QueryLists"
 
 type ProductFormData = z.infer<typeof ProductSchemaZod>
 
@@ -31,7 +31,7 @@ export function ProductDrawer({ isOpen, onClose, product }: ProductDrawerProps) 
   const { data: session } = useSession()
 
   const handleSubmit = (productData: ProductFormData) => {
-    console.log(productData)
+    // console.log(productData)
     toast({
       title: "Product added",
       description: `${product?.name} has been ${product ? "updated" : "added"} successfully.`,
@@ -79,6 +79,9 @@ function ProductForm({ product, sessions, onSubmit }: ProductFormProps) {
     },
   })
 
+  const {data: categoryProduct} = useGetAllCategoryProductQuery();
+  // console.log(categoryProduct)
+
   useEffect(() => {
     if (product) {
       form.reset({
@@ -109,21 +112,24 @@ function ProductForm({ product, sessions, onSubmit }: ProductFormProps) {
             </FormItem>
           )}
         />
-           <FormField
+        <FormField
           control={form.control}
           name="categoryId"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Product Category</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
+
+            {categoryProduct?.data.map((cat) => (
+              <Select key={cat.id} onValueChange={field.onChange} defaultValue={String(cat.id)}>
                 <SelectTrigger >
-                  <SelectValue placeholder="Pilih Kategori Produk"/>
+                  <SelectValue placeholder="Select Category"/>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">Category 1</SelectItem>
-                  <SelectItem value="2">Category 2</SelectItem>
+                  <SelectItem value={String(cat.id)}>{cat.categoryName}</SelectItem>
                 </SelectContent>
               </Select>
+            ))}
+
               <FormMessage />
             </FormItem>
           )}

@@ -92,12 +92,12 @@ export const columns: ColumnDef<ProductTypes>[] = [
     },
   },
   {
-    accessorKey: "category",
+    accessorKey: "categoryId",
     header: "Category",
     cell: ({ row }) => {
       return (
         <Badge variant="outline" className="font-medium">
-          {row.getValue("category")}
+          {row.getValue("categoryId")}
         </Badge>
       )
     },

@@ -18,8 +18,6 @@ export default function LoginPage() {
 
   const errorParams = searchParams.get("error");
 
-  console.log(errorParams)
-
   useEffect(() => {
     if(errorParams == "AccessDenied"){
       setTimeout(() => {

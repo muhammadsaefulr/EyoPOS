@@ -8,6 +8,7 @@ import { redirect } from "next/navigation"
 import ClientLayout from "./ClientLayout"
 import { db } from "@/drizzle/db"
 import { SessionProvider } from "next-auth/react"
+import ReactQueryProvider from "@/lib/reactquery/ReactQueryClient"
 
 interface LayoutProps {
   children: ReactNode
@@ -23,6 +24,8 @@ export default async function DashboardLayout({ children }: LayoutProps) {
   
   return (
     <ClientLayout>
+    <ReactQueryProvider>
+
     <SessionProvider session={session}>
     <div className="flex h-screen">
       <Sidebar />
@@ -34,6 +37,7 @@ export default async function DashboardLayout({ children }: LayoutProps) {
       </div>
     </div>
     </SessionProvider>
+    </ReactQueryProvider>
     </ClientLayout>
   )
 }

@@ -25,8 +25,6 @@ export const authConfig = {
       .from(users)
       .where(user.email ? eq(users.email, user.email) : isNull(users.email));
     
-      console.log("Find User Exist",existingUser)
-
       if(existingUser.length > 0){
         return true;
       }

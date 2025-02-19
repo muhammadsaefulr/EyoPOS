@@ -13,12 +13,21 @@ export type ProductTypes = {
     updatedBy?: string
   }
 
+export type ProductCatgoryData = {
+  id: number
+  categoryName: string
+}
+
+export type ProductCategory = {
+  message: string
+  data: ProductCatgoryData[]
+}
 
   // added by dan updatedby tetap dimasukan tapi untuk alasan keamanan addedby tidak boleh dimasukan ke form
   // maupun body dari api
   export type FormDataProductType = {
     name: string
-    category: string
+    categoryId: number
     price: number
     distPrice: number
     stock: number
@@ -32,6 +41,7 @@ export type ProductTypes = {
     price: z.number().min(0, "Price must be a positive number"),
     distPrice: z.number().min(0, "Distributor price must be a positive number"),
     stock: z.number().min(0, "Stock must be a positive number"),
+    sold: z.number().min(0, "Sold must be a positive number "),
     addedBy: z.string().optional(),
     updatedBy: z.string().optional(),
   })
