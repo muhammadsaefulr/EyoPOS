@@ -9,6 +9,7 @@ import ClientLayout from "./ClientLayout"
 import { db } from "@/drizzle/db"
 import { SessionProvider } from "next-auth/react"
 import ReactQueryProvider from "@/lib/reactquery/ReactQueryClient"
+import { Toaster } from "@/components/ui/toaster"
 
 interface LayoutProps {
   children: ReactNode
@@ -25,7 +26,6 @@ export default async function DashboardLayout({ children }: LayoutProps) {
   return (
     <ClientLayout>
     <ReactQueryProvider>
-
     <SessionProvider session={session}>
     <div className="flex h-screen">
       <Sidebar />
@@ -34,6 +34,7 @@ export default async function DashboardLayout({ children }: LayoutProps) {
           <TopNav username={session?.user.name ?? "Null"} avatarImage={session?.user.image ?? "/vercel.svg"} />
         </header>
         <main className="flex-1 overflow-auto p-4 bg-gray-100 dark:bg-[#0F0F12]">{children}</main>
+        <Toaster/>
       </div>
     </div>
     </SessionProvider>

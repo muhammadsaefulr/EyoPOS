@@ -23,14 +23,13 @@ export default function CategoryProductDrawer() {
   // Menambahkan kategori kosong di daftar
   const handleAddCategory = () => {
     // setCategories([...categories, { id: crypto.randomUUID(), categoryName: "" }]);
+    
   };
 
-  // Mengubah nama kategori di dalam tabel
   const handleChangeCategory = (id: number, newName: string) => {
     setCategories(categories.map(cat => (cat.id === id ? { ...cat, categoryName: newName } : cat)));
   };
 
-  // Hapus kategori
   const handleDelete = (id: number) => {
     setCategories(categories.filter(cat => cat.id !== id));
     setOpenDeleteAlert(false);

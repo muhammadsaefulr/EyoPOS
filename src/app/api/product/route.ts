@@ -17,6 +17,7 @@ export async function GET(req: NextRequest){
             createdAt: products.createdAt,
             addedBy: products.addedBy,
             updatedBy: products.updatedBy,
+            categoryId: products.categoryId,
             categoryName: productCategory.categoryName,
         }).from(products).leftJoin(productCategory, eq(products.categoryId, productCategory.id));;
 
@@ -36,11 +37,10 @@ export async function POST(req: Request) {
         categoryId: validatedData.categoryId,
         price: validatedData.price.toString(),  
         distPrice: validatedData.distPrice.toString(),  
-        sold: validatedData.sold,
+        sold: validatedData.sold ?? 0,
         stock: validatedData.stock,
         updatedBy: validatedData.updatedBy ?? "",
         addedBy: validatedData.addedBy ?? "",
-        createdAt: Date.now().toString(),
         }).returning();
   
       return NextResponse.json({ message: "Product added successfully", product: insertedProduct[0] }, { status: 201 });

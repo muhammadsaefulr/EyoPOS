@@ -1,28 +1,36 @@
 "use client"
 import { columns } from "@/components/dashboard/product/product-column"
 import { DataTable } from "@/components/dashboard/product/table-product"
-import { ProductTypes, productsInit } from "@/hooks/data-product"
+import { ProductCatgoryData, ProductTypes} from "@/hooks/data-product"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-import { useState } from "react"
-import { useToast } from "@/hooks/use-toast"
+import { useEffect, useState } from "react"
 import { ProductDrawer } from "@/components/dashboard/product/product-drawer"
+import { useGetAllCategoryProductQuery, useGetAllProductQuery } from "@/lib/reactquery/QueryLists"
+import { LoadingWithLogo } from "@/components/loading"
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<ProductTypes[]>(productsInit)
+  const [products, setProducts] = useState<ProductTypes[]>([])
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  const { toast } = useToast()
 
-  // const handleAddProduct = (newProduct: Omit<Product, "id">) => {
-  //   const id = (products.length + 1).toString()
-  //   setProducts([...products, { ...newProduct, id }])
-  //   setIsDrawerOpen(false)
-  //   toast({
-  //     title: "Product added",
-  //     description: `${newProduct.name} has been added successfully.`,
-  //   })
-  // }
+  const {data: prod, isLoading} = useGetAllProductQuery();
 
+  const [catProd, setCatProd] = useState<ProductCatgoryData[]>([]);
+  const {data: categoryProduct} = useGetAllCategoryProductQuery();
+  
+  useEffect(() => {
+    setCatProd(categoryProduct?.data ?? [])
+  }, [categoryProduct])
+
+  useEffect(() => {
+    setProducts(prod?.data ?? []);
+  }, [prod])
+
+  console.log(prod)
+
+  if(isLoading){
+    return <LoadingWithLogo/>
+  }
 
   return (
     <div className="bg-white p-4 rounded-md container mx-auto py-10">
@@ -38,7 +46,7 @@ export default function ProductsPage() {
           Add Product
         </Button>
       </div>
-      <DataTable columns={columns} data={products} />
+      <DataTable columns={columns} category={catProd} data={products ?? []} />
       <ProductDrawer 
         isOpen={isDrawerOpen}
         onClose={() => {

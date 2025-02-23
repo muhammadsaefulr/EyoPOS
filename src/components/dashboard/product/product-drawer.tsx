@@ -15,7 +15,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useSession } from "next-auth/react"
 import { Session } from "next-auth"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useGetAllCategoryProductQuery } from "@/lib/reactquery/QueryLists"
+import { useAddProductMutation, useGetAllCategoryProductQuery } from "@/lib/reactquery/QueryLists"
 
 type ProductFormData = z.infer<typeof ProductSchemaZod>
 
@@ -29,12 +29,19 @@ export function ProductDrawer({ isOpen, onClose, product }: ProductDrawerProps) 
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const { toast } = useToast()
   const { data: session } = useSession()
+  const mutation = useAddProductMutation();
 
   const handleSubmit = (productData: ProductFormData) => {
-    // console.log(productData)
+    console.log("✅ Form submitted with data:", productData);
+
+    mutation.mutate(productData)
+
+    onClose()
+
     toast({
+      variant: "default",
       title: "Product added",
-      description: `${product?.name} has been ${product ? "updated" : "added"} successfully.`,
+      description: `${productData.name} has been ${product ? "updated" : "added"} successfully.`,
     })
   }
 
@@ -70,9 +77,10 @@ function ProductForm({ product, sessions, onSubmit }: ProductFormProps) {
     resolver: zodResolver(ProductSchemaZod),
     defaultValues: {
       name: "",
-      categoryId: 1,
+      categoryId: Number(null),
       price: 0,
       distPrice: 0,
+      sold: 0,
       stock: 0,
       addedBy: sessions?.user.name ?? "",
       updatedBy: sessions?.user.name ?? "",
@@ -86,10 +94,10 @@ function ProductForm({ product, sessions, onSubmit }: ProductFormProps) {
     if (product) {
       form.reset({
         name: product.name,
-        categoryId: product.categoryId,
-        price: product.price,
-        distPrice: product.distPrice,
-        stock: product.stock,
+        categoryId: Number(product.categoryId),
+        price: Number(product.price),
+        distPrice: Number(product.distPrice),
+        stock: Number(product.stock),
         addedBy: product.addedBy,
         updatedBy: sessions?.user.name ?? "",
       })
@@ -118,18 +126,18 @@ function ProductForm({ product, sessions, onSubmit }: ProductFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Product Category</FormLabel>
-
-            {categoryProduct?.data.map((cat) => (
-              <Select key={cat.id} onValueChange={field.onChange} defaultValue={String(cat.id)}>
-                <SelectTrigger >
-                  <SelectValue placeholder="Select Category"/>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={String(cat.id)}>{cat.categoryName}</SelectItem>
-                </SelectContent>
-              </Select>
-            ))}
-
+              <Select onValueChange={(value) => field.onChange(Number(value))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select Category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categoryProduct?.data.map((cat) => (
+                  <SelectItem key={cat.id} value={String(cat.id)}>
+                    {cat.categoryName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
               <FormMessage />
             </FormItem>
           )}
@@ -141,7 +149,7 @@ function ProductForm({ product, sessions, onSubmit }: ProductFormProps) {
             <FormItem>
               <FormLabel>Product Price</FormLabel>
               <FormControl>
-                <Input type="number" {...field} />
+                <Input type="number" {...field} onChange={(e) => field.onChange(Number(e.target.value))} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -154,7 +162,7 @@ function ProductForm({ product, sessions, onSubmit }: ProductFormProps) {
             <FormItem>
               <FormLabel>Product Distributor Price</FormLabel>
               <FormControl>
-                <Input type="number" {...field} />
+                <Input type="number" {...field} onChange={(e) => field.onChange(Number(e.target.value))} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -167,7 +175,7 @@ function ProductForm({ product, sessions, onSubmit }: ProductFormProps) {
             <FormItem>
               <FormLabel>Product Stock</FormLabel>
               <FormControl>
-                <Input type="number" {...field} />
+                <Input type="number" {...field} onChange={(e) => field.onChange(Number(e.target.value))} />
               </FormControl>
               <FormMessage />
             </FormItem>

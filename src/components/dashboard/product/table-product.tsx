@@ -24,13 +24,15 @@ import {
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import CategoryProductDrawer from "./drawer-category"
+import { ProductCatgoryData } from "@/hooks/data-product"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
+  category: ProductCatgoryData[]
   data: TData[]
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, category }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -66,20 +68,21 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           className="w-full md:max-w-sm"
         />
 
-        {/* Bagian Kanan */}
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-2 w-full md:w-auto">
           <CategoryProductDrawer />
 
-          {/* Select untuk kategori */}
           <Select
-            value={(table.getColumn("categoryId")?.getFilterValue() as string) ?? ""}
-            onValueChange={(value: unknown) => table.getColumn("categoryId")?.setFilterValue(value)}
+            value={(table.getColumn("categoryName")?.getFilterValue() as string) ?? ""}
+            onValueChange={(value: unknown) => table.getColumn("categoryName")?.setFilterValue(value === "all" ? undefined : value)}
           >
             <SelectTrigger className="w-full md:w-[180px]">
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
+              {category.map((cat) => (
+                <SelectItem key={cat.id} value={cat.categoryName}>{cat.categoryName}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
 
