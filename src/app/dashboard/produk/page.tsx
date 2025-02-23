@@ -26,7 +26,7 @@ export default function ProductsPage() {
     setProducts(prod?.data ?? []);
   }, [prod])
 
-  console.log(prod)
+  // console.log(prod)
 
   if(isLoading){
     return <LoadingWithLogo/>

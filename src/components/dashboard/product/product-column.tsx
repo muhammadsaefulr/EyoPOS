@@ -14,8 +14,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown, MoreHorizontal, Star } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ProductDrawer } from "./product-drawer"
+import { useDeleteProductByIdMutation } from "@/lib/reactquery/QueryLists"
+import { useToast } from "@/hooks/use-toast"
 
 export const columns: ColumnDef<ProductTypes>[] = [
   {
@@ -152,7 +154,29 @@ export const columns: ColumnDef<ProductTypes>[] = [
     id: "actions",
     cell: ({ row }) => {
       const product = row.original
+      const { toast } = useToast()
       const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+      const deleteMutation = useDeleteProductByIdMutation();
+
+      const handleDeleteById = (prodId: string) => {
+        deleteMutation.mutate(prodId);
+      }
+
+      useEffect(() => {
+        if (deleteMutation.isError) {
+          toast({
+            variant: "destructive",
+            title: "An Error Occurred",
+            description: `Failed to process task, because error status: ${deleteMutation.status}`
+          });
+        } else if (deleteMutation.isSuccess) {
+          toast({
+            title: "Berhasil",
+            description: `Berhasil menghapus data`
+          });
+        }
+      }, [deleteMutation.isError, deleteMutation.isSuccess, deleteMutation.status, toast]);
 
       return (
         <DropdownMenu>
@@ -165,7 +189,7 @@ export const columns: ColumnDef<ProductTypes>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => setIsDrawerOpen(true)}>Edit product</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleDeleteById(product.id as string)} className="text-red-600">Delete</DropdownMenuItem>
           </DropdownMenuContent>
            <ProductDrawer
                   isOpen={isDrawerOpen}

@@ -47,7 +47,7 @@ export type ProductTypeRes = {
     price: z.number().min(0, "Price must be a positive number"),
     distPrice: z.number().min(0, "Distributor price must be a positive number"),
     stock: z.number().min(0, "Stock must be a positive number"),
-    sold: z.number().min(0, "Sold must be a positive number "),
+    sold: z.number().min(0, "Sold must be a positive number ").optional(),
     addedBy: z.string().optional(),
     updatedBy: z.string().optional(),
   })

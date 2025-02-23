@@ -34,9 +34,13 @@ export function ProductDrawer({ isOpen, onClose, product }: ProductDrawerProps) 
   const handleSubmit = (productData: ProductFormData) => {
     console.log("✅ Form submitted with data:", productData);
 
-    mutation.mutate(productData)
+    if(product){
+      console.log(productData)
+    } else {
+      mutation.mutate(productData)
+    }
 
-    onClose()
+    // onClose()
 
     toast({
       variant: "default",
@@ -98,11 +102,16 @@ function ProductForm({ product, sessions, onSubmit }: ProductFormProps) {
         price: Number(product.price),
         distPrice: Number(product.distPrice),
         stock: Number(product.stock),
+        sold: 0,
         addedBy: product.addedBy,
         updatedBy: sessions?.user.name ?? "",
       })
     }
   }, [product, form, sessions])
+
+  if(form.formState.errors) {
+    console.log("form error: ", form.formState.errors)
+  }
 
   return (
     <Form {...form}>
@@ -128,7 +137,7 @@ function ProductForm({ product, sessions, onSubmit }: ProductFormProps) {
               <FormLabel>Product Category</FormLabel>
               <Select onValueChange={(value) => field.onChange(Number(value))}>
               <SelectTrigger>
-                <SelectValue placeholder="Select Category" />
+                <SelectValue placeholder={field.value ? categoryProduct?.data.find((cat) => cat.id === field.value)?.categoryName : "Select Category"} />
               </SelectTrigger>
               <SelectContent>
                 {categoryProduct?.data.map((cat) => (

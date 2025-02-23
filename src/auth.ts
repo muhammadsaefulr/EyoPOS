@@ -20,14 +20,14 @@ export const authConfig = {
   callbacks: {
     async signIn({ user }) {
 
-      const existingUser = await db
-      .select()
-      .from(users)
-      .where(user.email ? eq(users.email, user.email) : isNull(users.email));
-    
-      if(existingUser.length > 0){
-        return true;
-      }
+        const existingUser = await db
+        .select()
+        .from(users)
+        .where(user.email ? eq(users.email, user.email) : isNull(users.email));
+      
+        if(existingUser.length > 0){
+          return true;
+        }
 
       return false
     },
