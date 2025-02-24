@@ -9,11 +9,11 @@ export const products = pgTable("products", {
 
   name: varchar("name", {length: 255}).notNull(),
 
-  price: numeric("price").notNull(),
+  price: integer("price").notNull(),
 
-  distPrice: numeric("dist_price").notNull(),
+  distPrice: integer("dist_price").notNull(),
 
-  categoryId: integer("category_id").notNull().references(() => productCategory.id, {onDelete: "cascade"}),
+  categoryId: varchar("category_id", {length: 7}).notNull().references(() => productCategory.id, {onDelete: "cascade"}),
 
   stock: integer("stock").notNull().default(0),
 

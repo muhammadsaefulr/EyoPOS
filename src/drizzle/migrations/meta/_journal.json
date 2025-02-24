@@ -22,6 +22,20 @@
       "when": 1738927300207,
       "tag": "0002_awesome_prima",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1740380898645,
+      "tag": "0003_common_yellowjacket",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1740388633126,
+      "tag": "0004_warm_cloak",
+      "breakpoints": true
     }
   ]
 }

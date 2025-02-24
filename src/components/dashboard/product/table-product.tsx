@@ -69,8 +69,6 @@ export function DataTable<TData, TValue>({ columns, data, category }: DataTableP
         />
 
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-2 w-full md:w-auto">
-          <CategoryProductDrawer />
-
           <Select
             value={(table.getColumn("categoryName")?.getFilterValue() as string) ?? ""}
             onValueChange={(value: unknown) => table.getColumn("categoryName")?.setFilterValue(value === "all" ? undefined : value)}
@@ -85,11 +83,10 @@ export function DataTable<TData, TValue>({ columns, data, category }: DataTableP
               ))}
             </SelectContent>
           </Select>
-
-          {/* Dropdown Menu */}
+          <CategoryProductDrawer />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-full flex justify-start md:w-auto">View</Button>
+              <Button variant="outline" className="w-full flex justify-center md:w-auto">View</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {table

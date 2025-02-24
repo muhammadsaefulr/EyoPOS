@@ -6,7 +6,7 @@ export type ProductTypes = {
     price: number
     distPrice: number
     categoryName: string
-    categoryId: number
+    categoryId: string
     stock: number
     sold: number
     createdAt: string
@@ -15,7 +15,7 @@ export type ProductTypes = {
   };
 
 export type ProductCatgoryData = {
-  id: number
+  id: string
   categoryName: string
 }
 
@@ -43,7 +43,7 @@ export type ProductTypeRes = {
 
   export const ProductSchemaZod = z.object({
     name: z.string().min(1, "Product name is required"),
-    categoryId: z.number().min(1, "Please Select Category"),
+    categoryId: z.string().min(7, "Please Select Category"),
     price: z.number().min(0, "Price must be a positive number"),
     distPrice: z.number().min(0, "Distributor price must be a positive number"),
     stock: z.number().min(0, "Stock must be a positive number"),
@@ -53,7 +53,7 @@ export type ProductTypeRes = {
   })
   
   export const CategoryProductSchemaZod = z.object({
-    id: z.number(),
+    id: z.string().min(7, "Invalid category hex id"),
     categoryName: z.string().min(1, "Invalid Category Name")
   })
   

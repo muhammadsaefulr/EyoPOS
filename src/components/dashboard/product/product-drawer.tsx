@@ -15,7 +15,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useSession } from "next-auth/react"
 import { Session } from "next-auth"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useAddProductMutation, useGetAllCategoryProductQuery } from "@/lib/reactquery/QueryLists"
+import { useAddProductMutation, useGetAllCategoryProductQuery, useUpdateProductMutation } from "@/lib/reactquery/QueryLists"
 
 type ProductFormData = z.infer<typeof ProductSchemaZod>
 
@@ -29,18 +29,19 @@ export function ProductDrawer({ isOpen, onClose, product }: ProductDrawerProps) 
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const { toast } = useToast()
   const { data: session } = useSession()
-  const mutation = useAddProductMutation();
+  const addProductMutation = useAddProductMutation();
+  const updateProductMutation = useUpdateProductMutation()
 
   const handleSubmit = (productData: ProductFormData) => {
     console.log("✅ Form submitted with data:", productData);
 
     if(product){
-      console.log(productData)
+      updateProductMutation.mutate({paramId: product.id as string, product: productData});
     } else {
-      mutation.mutate(productData)
+      addProductMutation.mutate(productData)
     }
 
-    // onClose()
+    onClose()
 
     toast({
       variant: "default",
@@ -81,9 +82,9 @@ function ProductForm({ product, sessions, onSubmit }: ProductFormProps) {
     resolver: zodResolver(ProductSchemaZod),
     defaultValues: {
       name: "",
-      categoryId: Number(null),
-      price: 0,
-      distPrice: 0,
+      categoryId: "",
+      price: Number(0),
+      distPrice: Number(0),
       sold: 0,
       stock: 0,
       addedBy: sessions?.user.name ?? "",
@@ -98,7 +99,7 @@ function ProductForm({ product, sessions, onSubmit }: ProductFormProps) {
     if (product) {
       form.reset({
         name: product.name,
-        categoryId: Number(product.categoryId),
+        categoryId: product.categoryId,
         price: Number(product.price),
         distPrice: Number(product.distPrice),
         stock: Number(product.stock),
@@ -135,7 +136,7 @@ function ProductForm({ product, sessions, onSubmit }: ProductFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Product Category</FormLabel>
-              <Select onValueChange={(value) => field.onChange(Number(value))}>
+              <Select onValueChange={(value) => field.onChange(value)}>
               <SelectTrigger>
                 <SelectValue placeholder={field.value ? categoryProduct?.data.find((cat) => cat.id === field.value)?.categoryName : "Select Category"} />
               </SelectTrigger>

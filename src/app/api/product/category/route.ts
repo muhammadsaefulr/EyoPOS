@@ -23,8 +23,8 @@ export async function POST(req: NextRequest) {
 
         const isExist = await db.select().from(productCategory).where(eq(productCategory.categoryName, validatedData.categoryName))
 
-        if(isExist){
-            return NextResponse.json({"message": `Category ${validatedData.categoryName} Was Exist`}, {status: 400})
+        if(isExist.length > 1){
+            return NextResponse.json({"message": `Category ${validatedData.categoryName} sudah ada !`}, {status: 400})
         }
 
         const results = await db.insert(productCategory).values(validatedData)
@@ -39,25 +39,4 @@ export async function POST(req: NextRequest) {
     }
 }
 
-export async function PUT(req: NextRequest) {
-    try {
-        const body = await req.json();
-        const validatedData = CategoryProductSchemaZod.parse(body);
-
-        const isExist = await db.select().from(productCategory).where(eq(productCategory.id, validatedData.id))
-
-        if(!isExist){
-            return NextResponse.json({message: `Category with id ${validatedData.id} not exist !`}, {status: 404})
-        }
-
-        const updatedRes = await db.update(productCategory).set(validatedData).where(eq(productCategory.id, validatedData.id))
-
-        return NextResponse.json({message: `Berhasil mengupdate kategori dengan id ${validatedData.id}`, data: updatedRes})
-    } catch(err){
-        if (err instanceof z.ZodError) {
-            return NextResponse.json({ error: err.errors }, { status: 400 });
-        }
-        return NextResponse.json({ message: `Unknown 500 Error: ${err}`}, {status: 500});
-    }
-}
 
