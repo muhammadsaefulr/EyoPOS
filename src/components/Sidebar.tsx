@@ -33,7 +33,7 @@ export default function Sidebar() {
   }: {
     href: string
     tag?: string
-    tagIcon?: any,
+    tagIcon?: React.ElementType | null,
     icon: React.ElementType
     children: React.ReactNode
   }) {
@@ -45,7 +45,7 @@ export default function Sidebar() {
       >
         <Icon className="h-4 w-4 mr-3 flex-shrink-0" />
         {children}
-        {tag && <TagIcon alt={tag} className="h-4 w-4 mx-3 flex-shrink-0" />}
+        {tag && TagIcon && <TagIcon alt={tag} className="h-4 w-4 mx-3 flex-shrink-0" />}
       </Link>
     )
   }

@@ -21,9 +21,10 @@ export function LoginForm({
   const handleSignIn = (type: "google" | "email") => {
     setIsLoading(true);
 
-    if(type === "google") {
-      onGoogleSignIn && onGoogleSignIn();
+    if (type === "google" && onGoogleSignIn) {
+      onGoogleSignIn();
     }
+    
 
   };
 

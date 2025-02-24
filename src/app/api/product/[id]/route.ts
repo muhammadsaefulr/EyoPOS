@@ -2,7 +2,6 @@ import { db } from "@/drizzle/db";
 import { products } from "@/drizzle/schema";
 import { ProductSchemaZod } from "@/hooks/data-product";
 import { eq } from "drizzle-orm";
-import { NextApiRequest } from "next";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 

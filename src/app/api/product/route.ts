@@ -1,11 +1,11 @@
 import { db } from "@/drizzle/db";
 import { productCategory, products } from "@/drizzle/schema";
 import { ProductSchemaZod } from "@/hooks/data-product";
-import { eq, sql } from "drizzle-orm";
-import { NextRequest, NextResponse } from "next/server";
+import { eq } from "drizzle-orm";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 
-export async function GET(req: NextRequest){
+export async function GET(){
     try {
         const result = await db.select({
             id: products.id,
@@ -35,8 +35,8 @@ export async function POST(req: Request) {
       const insertedProduct = await db.insert(products).values({
         name: validatedData.name ?? "",
         categoryId: validatedData.categoryId,
-        price: validatedData.price.toString(),  
-        distPrice: validatedData.distPrice.toString(),  
+        price: validatedData.price,  
+        distPrice: validatedData.distPrice,  
         sold: validatedData.sold ?? 0,
         stock: validatedData.stock,
         updatedBy: validatedData.updatedBy ?? "",

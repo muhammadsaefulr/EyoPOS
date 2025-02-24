@@ -1,6 +1,6 @@
 "use client"
 
-import type { ColumnDef } from "@tanstack/react-table"
+import type { ColumnDef, Row } from "@tanstack/react-table"
 import type { ProductTypes } from "@/hooks/data-product"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -13,8 +13,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, MoreHorizontal, Star } from "lucide-react"
-import { useEffect, useState } from "react"
+import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import React from "react"
 import { ProductDrawer } from "./product-drawer"
 import { useDeleteProductByIdMutation } from "@/lib/reactquery/QueryLists"
 import { useToast } from "@/hooks/use-toast"
@@ -152,55 +152,59 @@ export const columns: ColumnDef<ProductTypes>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const product = row.original
-      const { toast } = useToast()
-      const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-
-      const deleteMutation = useDeleteProductByIdMutation();
-
-      const handleDeleteById = (prodId: string) => {
-        deleteMutation.mutate(prodId);
-      }
-
-      useEffect(() => {
-        if (deleteMutation.isError) {
-          toast({
-            variant: "destructive",
-            title: "An Error Occurred",
-            description: `Failed to process task, because error status: ${deleteMutation.status}`
-          });
-        } else if (deleteMutation.isSuccess) {
-          toast({
-            title: "Berhasil",
-            description: `Berhasil menghapus data`
-          });
-        }
-      }, [deleteMutation.isError, deleteMutation.isSuccess, deleteMutation.status, toast]);
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => setIsDrawerOpen(true)}>Edit product</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleDeleteById(product.id as string)} className="text-red-600">Delete</DropdownMenuItem>
-          </DropdownMenuContent>
-           <ProductDrawer
-                  isOpen={isDrawerOpen}
-                  onClose={() => {
-                    setIsDrawerOpen(false)
-                  }}
-                  product={product}
-                />
-        </DropdownMenu>
-      )
+    cell: ({ row }) => <ActionCell row={row} />
     },
-  },
 ]
+
+function ActionCell({ row }: { row: Row<ProductTypes> }) {
+  const product = row.original
+  const { toast } = useToast()
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
+
+  const deleteMutation = useDeleteProductByIdMutation()
+
+  const handleDeleteById = (prodId: string) => {
+    deleteMutation.mutate(prodId)
+  }
+
+  React.useEffect(() => {
+    if (deleteMutation.isError) {
+      toast({
+        variant: "destructive",
+        title: "An Error Occurred",
+        description: `Failed to process task, because error status: ${deleteMutation.status}`,
+      })
+    } else if (deleteMutation.isSuccess) {
+      toast({
+        title: "Berhasil",
+        description: `Berhasil menghapus data`,
+      })
+    }
+  }, [deleteMutation.isError, deleteMutation.isSuccess, deleteMutation.status, toast])
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuItem onClick={() => setIsDrawerOpen(true)}>Edit product</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => handleDeleteById(product.id as string)} className="text-red-600">
+          Delete
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+      <ProductDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => {
+          setIsDrawerOpen(false)
+        }}
+        product={product}
+      />
+    </DropdownMenu>
+  )
+}
 

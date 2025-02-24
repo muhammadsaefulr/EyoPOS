@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Trash2, PlusCircle, AlertTriangle } from "lucide-react";
 import type { ProductCatgoryData } from "@/hooks/data-product";
@@ -17,7 +17,7 @@ export default function CategoryProductDrawer() {
   const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<ProductCatgoryData | null>(null);
 
-  const { data: category, isLoading } = useGetAllCategoryProductQuery();
+  const { data: category } = useGetAllCategoryProductQuery();
   const addCategoryMutate = useAddCategoryProductMutation();
   const updateCategoryMutate = useUpdateCategoryProductMutation();
   const deleteCategoryMutate = useDeleteCategoryProductByIdMutation();
@@ -35,7 +35,7 @@ export default function CategoryProductDrawer() {
   };
 
   const handleDelete = (id: string) => {
-    // setCategories(categories.filter((cat) => cat.id !== id));
+    deleteCategoryMutate.mutate(id)
     setOpenDeleteAlert(false);
   };
 
@@ -46,8 +46,16 @@ export default function CategoryProductDrawer() {
       if (category?.data.some((existingCat: ProductCatgoryData) => existingCat.id === cat.id)) {
         updateCategoryMutate.mutate({ category: cat, paramId: cat.id });
 
-        updateCategoryMutate.isSuccess ? toast({ title: "Berhasil", description: `Berhasil menghapus data` }) : toast({ variant: "destructive", title: "An Error Occurred", description: `Failed to remove data`});
-      } else {
+        if (updateCategoryMutate.isSuccess) {
+          toast({ title: "Berhasil", description: "Berhasil menghapus data" });
+        } else {
+          toast({
+            variant: "destructive",
+            title: "An Error Occurred",
+            description: "Failed to remove data",
+          });
+
+        }} else {
         addCategoryMutate.mutate(cat);
       }
     });
@@ -128,7 +136,7 @@ export default function CategoryProductDrawer() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setOpenDeleteAlert(false)}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => deleteCategoryMutate.mutate(selectedCategory?.id ?? "")}>Delete</AlertDialogAction>
+            <AlertDialogAction onClick={() => handleDelete(selectedCategory?.id ?? "")}>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

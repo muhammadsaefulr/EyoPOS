@@ -1,7 +1,7 @@
 "use client"
 
 import type { ColumnDef } from "@tanstack/react-table"
-import type { Product } from "@/hooks/data-product"
+import type { ProductTypes } from "@/hooks/data-product"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -13,11 +13,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, MoreHorizontal, Star } from "lucide-react"
-import { useState } from "react"
+import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 // import { ProductDrawer } from "./product-drawer"
 
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<ProductTypes>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -115,8 +114,10 @@ export const columns: ColumnDef<Product>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      // const product = row.original
+      const member = row.original
       // const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+      // console.log(member)
+      console.log(member)
 
       return (
         <DropdownMenu>

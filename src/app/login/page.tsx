@@ -6,6 +6,7 @@ import { Logo } from "@/components/logo"
 import { useToast } from "@/hooks/use-toast";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import Image from "next/image";
 
 export default function LoginPage() {
   const handleGoogleSignIn = () => {
@@ -24,7 +25,7 @@ export default function LoginPage() {
         toast({ variant: "destructive", title: "Unathorized", description: "Email Tidak Terdaftar Atau Password Salah"});
       }, 100);
     }
-  }, [errorParams]);
+  }, [errorParams, toast]);
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
@@ -41,8 +42,10 @@ export default function LoginPage() {
         </div>
       </div>
       <div className="relative hidden bg-muted lg:block">
-        <img
-          src="https://c4.wallpaperflare.com/wallpaper/179/915/685/photography-water-reflection-bali-wallpaper-preview.jpg"
+        <Image
+          src="/photography-water-reflection-bali-wallpaper-preview.jpg"
+          width={510}
+          height={510}
           alt="Image"
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />

@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-export async function GET(req: NextRequest){
+export async function GET(){
     try {
         const results = await db.select().from(productCategory);
 
