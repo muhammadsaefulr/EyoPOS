@@ -191,7 +191,7 @@ function ActionCell({ row }: { row: Row<ProductTypes> }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem onClick={() => setIsDrawerOpen(true)}>Edit product</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setIsDrawerOpen(true)}>Detail Produk</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => handleDeleteById(product.id as string)} className="text-red-600">
           Delete

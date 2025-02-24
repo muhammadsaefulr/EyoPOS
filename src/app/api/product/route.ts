@@ -15,6 +15,7 @@ export async function GET(){
             stock: products.stock,
             sold: products.sold,
             createdAt: products.createdAt,
+            updatedAt: products.updatedAt,
             addedBy: products.addedBy,
             updatedBy: products.updatedBy,
             categoryId: products.categoryId,

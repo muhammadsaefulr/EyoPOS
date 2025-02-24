@@ -1,6 +1,7 @@
 import { pgTable, text, integer, timestamp, varchar } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { productCategory } from "./product_category_schema";
+import { timeStamp } from "console";
 
 export const products = pgTable("products", {
   id: text("id")
@@ -22,6 +23,8 @@ export const products = pgTable("products", {
   createdAt: timestamp("created_at", { mode: "string" })
     .notNull()
     .default(sql`CURRENT_TIMESTAMP`),
+    
+  updatedAt: timestamp('updated_at'),
 
   addedBy: varchar("added_by", {length:255}).notNull(),
 

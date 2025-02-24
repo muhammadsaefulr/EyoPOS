@@ -9,6 +9,11 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     try {
         const body = await req.json()
         const { id } = params;
+
+        if (body.updatedAt) {
+            body.updatedAt = new Date(body.updatedAt);
+        }
+        
         const validatedData = await ProductSchemaZod.parse(body);
 
         const isExit = db.select().from(products).where(eq(products.id, id as string))
@@ -25,6 +30,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
             stock: validatedData.stock,
             updatedBy: validatedData.updatedBy ?? "",
             addedBy: validatedData.addedBy ?? "",
+            updatedAt: validatedData.updatedAt
         }).where(eq(products.id, id as string)).returning()
 
         return NextResponse.json({message: `Berhasil mengupdate produk dengan id ${id}`, data: updatedRes})

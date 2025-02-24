@@ -105,8 +105,10 @@ function ProductForm({ product, sessions, onSubmit }: ProductFormProps) {
         stock: Number(product.stock),
         sold: 0,
         addedBy: product.addedBy,
+        updatedAt: product.updatedAt ? new Date(product.updatedAt) : new Date(),
         updatedBy: sessions?.user.name ?? "",
       })
+
     }
   }, [product, form, sessions])
 
@@ -211,6 +213,18 @@ function ProductForm({ product, sessions, onSubmit }: ProductFormProps) {
               <FormLabel>Updated By</FormLabel>
               <FormControl>
                 <Input {...field} disabled />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="updatedAt"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Updated At</FormLabel>
+              <FormControl>
+                <Input type="date" placeholder="no data" {...field} disabled={true} value={field.value ? new Date(field.value).toISOString().split("T")[0] : ""} />
               </FormControl>
             </FormItem>
           )}

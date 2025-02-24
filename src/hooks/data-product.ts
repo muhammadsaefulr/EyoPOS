@@ -10,6 +10,7 @@ export type ProductTypes = {
     stock: number
     sold: number
     createdAt: string
+    updatedAt: string
     addedBy?: string
     updatedBy?: string
   };
@@ -50,6 +51,8 @@ export type ProductTypeRes = {
     sold: z.number().min(0, "Sold must be a positive number ").optional(),
     addedBy: z.string().optional(),
     updatedBy: z.string().optional(),
+    createdAt: z.date().optional(),
+    updatedAt: z.date().optional(),
   })
   
   export const CategoryProductSchemaZod = z.object({

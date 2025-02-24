@@ -36,6 +36,17 @@ export default function CategoryProductDrawer() {
 
   const handleDelete = (id: string) => {
     deleteCategoryMutate.mutate(id)
+
+    if (deleteCategoryMutate.isSuccess) {
+      toast({ title: "Berhasil", description: "Berhasil menghapus data" });
+    } else if(deleteCategoryMutate.isError) {
+      toast({
+        variant: "destructive",
+        title: "An Error Occurred",
+        description: "Failed to remove data",
+      });
+    }
+
     setOpenDeleteAlert(false);
   };
 
@@ -47,8 +58,8 @@ export default function CategoryProductDrawer() {
         updateCategoryMutate.mutate({ category: cat, paramId: cat.id });
 
         if (updateCategoryMutate.isSuccess) {
-          toast({ title: "Berhasil", description: "Berhasil menghapus data" });
-        } else {
+          toast({ title: "Berhasil", description: "Berhasil menyimpan data" });
+        } else if(updateCategoryMutate.isError) {
           toast({
             variant: "destructive",
             title: "An Error Occurred",

@@ -36,6 +36,20 @@
       "when": 1740388633126,
       "tag": "0004_warm_cloak",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1740393288271,
+      "tag": "0005_lyrical_silhouette",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1740395082712,
+      "tag": "0006_yummy_nico_minoru",
+      "breakpoints": true
     }
   ]
 }
