@@ -50,6 +50,20 @@
       "when": 1740395082712,
       "tag": "0006_yummy_nico_minoru",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1740557112147,
+      "tag": "0007_spooky_doomsday",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1740557786778,
+      "tag": "0008_secret_firestar",
+      "breakpoints": true
     }
   ]
 }

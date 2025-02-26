@@ -1,10 +1,9 @@
 import { pgTable, text, integer, timestamp, varchar } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { productCategory } from "./product_category_schema";
-import { timeStamp } from "console";
 
 export const products = pgTable("products", {
-  id: text("id")
+  id: varchar("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
 
