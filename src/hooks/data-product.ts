@@ -20,6 +20,7 @@ export type ProductCatgoryData = {
   categoryName: string
 }
 
+// Type Res API
 export type ProductCategoryResp = {
   message: string
   data: ProductCatgoryData[]
@@ -29,6 +30,8 @@ export type ProductTypeRes = {
   message: string,
   data: ProductTypes[];
 }
+
+  // Form And Zod Scheme
 
   // added by dan updatedby tetap dimasukan tapi untuk alasan keamanan addedby tidak boleh dimasukan ke form
   // maupun body dari api
@@ -54,6 +57,23 @@ export type ProductTypeRes = {
     createdAt: z.date().optional(),
     updatedAt: z.date().optional(),
   })
+
+  export const RestockSchema = z.object({
+    productId: z.string().min(25, "Must Valid Product Id"),
+    quantity: z.number().min(1, "Quantity must be at least 1"),
+    pricePerUnit: z.number().min(1, "Price per unit must be at least 1"),
+    totalCost: z.number().min(1, "Total cost must be calculated"),
+    restockedBy: z.string().min(2, "Must Filled"),
+    restockedByUserId: z.string().min(2, "Must Filled")
+  })
+
+  export type RestockTypes = {
+    productId: string
+    quantity: number
+    pricePerUnit: number
+    totalCost: number
+    restockedBy: string
+  }
   
   export const CategoryProductSchemaZod = z.object({
     id: z.string().min(7, "Invalid category hex id"),

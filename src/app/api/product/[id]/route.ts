@@ -47,7 +47,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
     try{
         
-        const { id } = params;
+        const id  = params.id;
         const isExist = await db.select().from(products).where(eq(products.id, id as string))
 
         if(!isExist){

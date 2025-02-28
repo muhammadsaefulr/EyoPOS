@@ -1,4 +1,4 @@
-import { ProductCategoryResp, ProductCatgoryData, ProductSchemaZod, ProductTypeRes} from "@/hooks/data-product";
+import { ProductCategoryResp, ProductCatgoryData, ProductSchemaZod, ProductTypeRes, RestockTypes} from "@/hooks/data-product";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import axios from "axios";
@@ -174,4 +174,37 @@ export function useDeleteProductByIdMutation() {
       console.error(error);
     },
   });
+}
+
+export function useRestockProductMutation(){
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (restockScheme: RestockTypes) => {
+      try {
+        const res = await axios.post(`/api/product/restock`, restockScheme)
+      
+        if (res.status !== 200) {
+          throw new Error("Failed to delete product");
+        }
+        return res.data;
+      } catch(error){
+        throw new Error(error instanceof Error ? error.message : "Unknown error");
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["getAllProduct"] });
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  })
+}
+
+export function useAddOrderMutation(){
+  return useMutation({
+    mutationFn: async () => {
+      
+    }
+  })
 }

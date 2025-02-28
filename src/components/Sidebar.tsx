@@ -10,6 +10,7 @@ import {
   Package2,
   ReceiptCent,
   CircleAlert,
+  BookCheck,
 } from "lucide-react"
 
 import { Home } from "lucide-react"
@@ -117,6 +118,20 @@ export default function Sidebar() {
                   </NavItem>
                   <NavItem href="/dashboard/sales/report" icon={ReceiptCent}>
                     Laporan Penjualan
+                  </NavItem>
+                </div>
+              </div>
+
+              <div>
+                <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                  Order
+                </div>
+                <div className="space-y-1">
+                  <NavItem href="/dashboard/order/manual" icon={BookCheck}>
+                    Manual Order
+                  </NavItem>
+                  <NavItem href="/dashboard/order/listorder" icon={ReceiptCent}>
+                    List Order
                   </NavItem>
                 </div>
               </div>

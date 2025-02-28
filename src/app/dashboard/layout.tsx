@@ -27,7 +27,9 @@ export default async function DashboardLayout({ children }: LayoutProps) {
     <ReactQueryProvider>
     <SessionProvider session={session}>
     <div className="flex h-screen">
+      <div className="overflow-y-auto scrollbar-hidden">
       <Sidebar />
+      </div>
       <div className="w-full flex flex-1 flex-col">
         <header className="h-16">
           <TopNav username={session?.user.name ?? "Null"} avatarImage={session?.user.image ?? "/vercel.svg"} />

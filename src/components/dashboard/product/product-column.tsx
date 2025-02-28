@@ -13,11 +13,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import React from "react"
+import { AlertTriangle, ArrowUpDown, MoreHorizontal } from "lucide-react"
+import React, { useState } from "react"
 import { ProductDrawer } from "./product-drawer"
 import { useDeleteProductByIdMutation } from "@/lib/reactquery/QueryLists"
 import { useToast } from "@/hooks/use-toast"
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
+import { RestockDrawer } from "./product-restock-drawer"
+
 
 export const columns: ColumnDef<ProductTypes>[] = [
   {
@@ -159,7 +162,9 @@ export const columns: ColumnDef<ProductTypes>[] = [
 function ActionCell({ row }: { row: Row<ProductTypes> }) {
   const product = row.original
   const { toast } = useToast()
-  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
+  const [isDrawerProductOpen, setIsDrawerProductOpen] = useState(false)
+  const [isDrawerProductRestockOpen, setIsDrawerProductRestockOpen] = useState(false)
+  const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
 
   const deleteMutation = useDeleteProductByIdMutation()
 
@@ -183,28 +188,50 @@ function ActionCell({ row }: { row: Row<ProductTypes> }) {
   }, [deleteMutation.isError, deleteMutation.isSuccess, deleteMutation.status, toast])
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem onClick={() => setIsDrawerOpen(true)}>Detail Produk</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => handleDeleteById(product.id as string)} className="text-red-600">
-          Delete
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-      <ProductDrawer
-        isOpen={isDrawerOpen}
-        onClose={() => {
-          setIsDrawerOpen(false)
-        }}
-        product={product}
-      />
-    </DropdownMenu>
+    <div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem onClick={() => setIsDrawerProductRestockOpen(true)}>Restock Product</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsDrawerProductOpen(true)}>Detail Produk</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => setOpenDeleteAlert(true)} className="text-red-600">
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+        <ProductDrawer
+          isOpen={isDrawerProductOpen}
+          onClose={() => {
+            setIsDrawerProductOpen(false)
+          }}
+          product={product}
+        />
+        <RestockDrawer isOpen={isDrawerProductRestockOpen} onClose={() => setIsDrawerProductRestockOpen(false)} productId={product.id as string}/>
+      </DropdownMenu>
+
+      <AlertDialog open={openDeleteAlert} onOpenChange={setOpenDeleteAlert}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            <AlertTriangle className="w-5 h-5 inline mr-2 text-red-500" />
+            Warning
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            Deleting this product will remove all data associated with it. Are you sure?
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={() => setOpenDeleteAlert(false)}>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={() => handleDeleteById(product.id as string)}>Delete</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+      </AlertDialog>
+    </div>
   )
 }
 

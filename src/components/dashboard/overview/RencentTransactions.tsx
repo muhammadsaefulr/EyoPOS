@@ -13,7 +13,7 @@ export default function RecentTransactions() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-primary">Pembelian Terakhir</CardTitle>
+        <CardTitle className="text-primary">Penjualan Terakhir</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
