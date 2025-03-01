@@ -1,5 +1,4 @@
-import { min } from "drizzle-orm"
-import { string, z } from "zod"
+import { z } from "zod"
 
 export type ProductOrder = {
     productId: string,
@@ -35,3 +34,29 @@ export const OrderSchemaZod = z.object({
     totalPrice: z.number().default(0),
     items: z.array(ProductOrder)
 })
+
+export type Order = {
+    id: string
+    customer: string
+    date: Date
+    status: "pending" | "processing" | "completed" | "cancelled"
+    total: number
+    items: number
+  }
+  
+  export type OrderItem = {
+    id: string
+    productName: string
+    quantity: number
+    price: number
+    total: number
+  }
+  
+  export type OrderDetails = Order & {
+    orderItems: OrderItem[]
+    notes?: string
+    paymentMethod: string
+    tax: number
+    subtotal: number
+  }
+  

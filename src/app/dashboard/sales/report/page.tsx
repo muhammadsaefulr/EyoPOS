@@ -56,8 +56,10 @@ export default function Component() {
               <CardTitle className="text-lg font-semibold">Sales by Product Category</CardTitle>
               <BarChartIcon className="w-5 h-5 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <BarchartChart className="aspect-[16/9]" />
+            <CardContent className="w-full ">
+              <div className="w-full overflow-x-auto max-w-full sm:w-1/2 overflow-hidden">
+                <BarchartChart className="w-full h-auto aspect-[16/2]" />
+              </div>
             </CardContent>
           </Card>
           <Card>

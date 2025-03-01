@@ -24,7 +24,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import CategoryProductDrawer from "./drawer-category"
-import { ProductCatgoryData } from "@/hooks/data-product"
+import { ProductCatgoryData } from "@/types/ProductTypes"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]

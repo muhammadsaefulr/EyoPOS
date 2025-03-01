@@ -1,4 +1,4 @@
-import { ProductCategoryResp, ProductCatgoryData, ProductSchemaZod, ProductTypeRes, RestockTypes} from "@/hooks/data-product";
+import { ProductCategoryResp, ProductCatgoryData, ProductSchemaZod, ProductTypeRes, RestockTypes} from "@/types/ProductTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import axios from "axios";

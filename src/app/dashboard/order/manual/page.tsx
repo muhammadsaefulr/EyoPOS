@@ -7,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useGetAllCategoryProductQuery, useGetAllProductQuery } from "@/lib/reactquery/QueryLists"
-import { ProductCatgoryData, ProductTypes } from "@/hooks/data-product"
+import { ProductCatgoryData, ProductTypes } from "@/types/ProductTypes"
 import { formatIDR } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
 
@@ -41,6 +41,7 @@ export default function ProductOrder() {
   }, [order])
 
   const setFilterProduct = (categoryId: string) => {
+    console.log(categoryId)
     const filtered = productItem.filter((val) =>  categoryId === "all" || val.categoryId == categoryId)
 
     setProductItemFiltered(filtered)
@@ -92,10 +93,10 @@ export default function ProductOrder() {
     console.log("Submit Order YGY", submitVal)
   }
   return (
-    <div className="flex flex-col lg:flex-row h-screen">
+    <div className="flex flex-col lg:flex-row">
       <div className="flex-1 p-6">
-        <div className="flex justify-between">
-          <h1 className="text-2xl font-bold mb-6">Product List</h1>
+        <div className="flex flex-col justify-between sm:flex-row sm:w-full pb-12">
+        <h1 className="text-2xl font-bold mb-6">Product List</h1>
           <Select
             onValueChange={(value: unknown) => setFilterProduct(value as string)}
           >
@@ -105,7 +106,7 @@ export default function ProductOrder() {
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
               {categoryProduct.map((cat) => (
-                <SelectItem key={cat.id} value={cat.categoryName}>{cat.categoryName}</SelectItem>
+                <SelectItem key={cat.id} value={cat.id}>{cat.categoryName}</SelectItem>
               ))}
             </SelectContent>
           </Select>        

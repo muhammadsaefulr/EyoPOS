@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Trash2, PlusCircle, AlertTriangle } from "lucide-react";
-import type { ProductCatgoryData } from "@/hooks/data-product";
+import type { ProductCatgoryData } from "@/types/ProductTypes";
 import { useAddCategoryProductMutation, useDeleteCategoryProductByIdMutation, useGetAllCategoryProductQuery, useUpdateCategoryProductMutation } from "@/lib/reactquery/QueryLists";
 import { generateHexId7 } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";

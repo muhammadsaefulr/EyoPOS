@@ -1,7 +1,7 @@
 "use client"
 import { columns } from "@/components/dashboard/product/product-column"
 import { DataTable } from "@/components/dashboard/product/table-product"
-import { ProductCatgoryData, ProductTypes} from "@/hooks/data-product"
+import { ProductCatgoryData, ProductTypes} from "@/types/ProductTypes"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { useEffect, useState } from "react"

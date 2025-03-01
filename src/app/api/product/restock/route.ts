@@ -1,6 +1,6 @@
 import { db } from "@/drizzle/db";
 import { products, restocks } from "@/drizzle/schema";
-import { RestockSchema } from "@/hooks/data-product";
+import { RestockSchema } from "@/types/ProductTypes";
 import { eq, sql } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";

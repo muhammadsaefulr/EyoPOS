@@ -34,7 +34,7 @@ export default async function DashboardLayout({ children }: LayoutProps) {
         <header className="h-16">
           <TopNav username={session?.user.name ?? "Null"} avatarImage={session?.user.image ?? "/vercel.svg"} />
         </header>
-        <main className="flex-1 overflow-auto p-4 bg-gray-100 dark:bg-[#0F0F12]">{children}</main>
+        <main className="flex-1 overflow-auto p-4 bg-gray-100 dark:bg-[#0F0F12] scrollbar-hidden">{children}</main>
         <Toaster/>
       </div>
     </div>

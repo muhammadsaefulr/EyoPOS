@@ -1,7 +1,7 @@
 "use client"
 
 import type { ColumnDef, Row } from "@tanstack/react-table"
-import type { ProductTypes } from "@/hooks/data-product"
+import type { ProductTypes } from "@/types/ProductTypes"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import {

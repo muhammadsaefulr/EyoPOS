@@ -12,7 +12,7 @@ import { Form, FormField, FormItem, FormControl, FormLabel, FormMessage } from "
 import { useToast } from "@/hooks/use-toast"
 import { useSession } from "next-auth/react"
 import { Session } from "next-auth"
-import { RestockSchema } from "@/hooks/data-product"
+import { RestockSchema } from "@/types/ProductTypes"
 import { useRestockProductMutation } from "@/lib/reactquery/QueryLists"
 
 type RestockFormData = z.infer<typeof RestockSchema>
