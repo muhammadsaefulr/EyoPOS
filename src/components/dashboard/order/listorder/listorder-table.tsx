@@ -103,73 +103,15 @@ export default function POSOrderManagement() {
               <h2 className="text-2xl font-bold tracking-tight">Orders</h2>
               <p className="text-muted-foreground">Manage your point of sale orders and transactions</p>
             </div>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm">
+            <div className="flex items-center">
+              <Button className="bg-primary text-white" variant="outline" size="lg">
                 <Download className="mr-2 h-4 w-4" />
                 Export
               </Button>
-              <Dialog open={isAddOrderOpen} onOpenChange={setIsAddOrderOpen}>
-                <DialogTrigger asChild>
-                  <Button size="sm">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Order
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[600px]">
-                  <DialogHeader>
-                    <DialogTitle>Add New Order</DialogTitle>
-                    <DialogDescription>
-                      Create a new point of sale order with customer and product details.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="customer" className="text-right">
-                        Customer
-                      </Label>
-                      <Input id="customer" placeholder="Customer name" className="col-span-3" />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="status" className="text-right">
-                        Status
-                      </Label>
-                      <Select>
-                        <SelectTrigger className="col-span-3">
-                          <SelectValue placeholder="Select status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="pending">Pending</SelectItem>
-                          <SelectItem value="processing">Processing</SelectItem>
-                          <SelectItem value="completed">Completed</SelectItem>
-                          <SelectItem value="cancelled">Cancelled</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label className="text-right">Items</Label>
-                      <div className="col-span-3 border rounded-md p-3">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-medium">Product List</span>
-                          <Button variant="outline" size="sm">
-                            <Plus className="h-4 w-4" />
-                          </Button>
-                        </div>
-                        <div className="text-sm text-muted-foreground italic">No products added yet</div>
-                      </div>
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button variant="outline" onClick={() => setIsAddOrderOpen(false)}>
-                      Cancel
-                    </Button>
-                    <Button onClick={() => setIsAddOrderOpen(false)}>Save Order</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
             </div>
           </div>
           <Tabs defaultValue="all" className="w-full">
-            <div className="w-full max-w-screen-xl px-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="w-full max-w-screen-xl flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <TabsList>
                 <TabsTrigger value="all" onClick={() => setStatusFilter("all")}>
                   All Orders

@@ -97,21 +97,19 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: "total",
     header: ({ column }) => {
       return (
-        <div className="text-right">
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
             Total
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
-        </div>
       )
     },
     cell: ({ row }) => {
       const amount = Number.parseFloat(row.getValue("total"))
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
-        currency: "USD",
+        currency: "IDR",
       }).format(amount)
-      return <div className="text-right font-medium">{formatted}</div>
+      return <div className="font-medium mx-4">{formatted}</div>
     },
   },
   {

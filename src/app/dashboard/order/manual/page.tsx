@@ -95,7 +95,7 @@ export default function ProductOrder() {
   return (
     <div className="flex flex-col lg:flex-row">
       <div className="flex-1 p-6">
-        <div className="flex flex-col justify-between sm:flex-row sm:w-full pb-12">
+        <div className="flex flex-col justify-between md:sm:flex-row md:sm:w-full pb-12">
         <h1 className="text-2xl font-bold mb-6">Product List</h1>
           <Select
             onValueChange={(value: unknown) => setFilterProduct(value as string)}
