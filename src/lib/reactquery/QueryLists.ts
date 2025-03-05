@@ -2,6 +2,7 @@ import { ProductCategoryResp, ProductCatgoryData, ProductSchemaZod, ProductTypeR
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import axios from "axios";
+import { OrderDetails, OrderResponse } from "@/types/OrderProductTypes";
 
 export type ProductType = z.infer<typeof ProductSchemaZod>;
 
@@ -26,9 +27,9 @@ export function useAddCategoryProductMutation(){
   return useMutation({
     mutationFn: async (category: ProductCatgoryData) => {
       try {
-        const res = await axios.post('/api/product/category', category)  
+        const res = await axios.post(`/api/product/category`, category)  
         if (res.status !== 200) {
-          throw new Error("Failed to add product");
+          throw new Error("Failed to add category product");
         }
 
         return res.data;     
@@ -53,7 +54,7 @@ export function useUpdateCategoryProductMutation(){
         const res = await axios.put(`/api/product/category/${paramId}`, category)
 
         if (res.status !== 200) {
-          throw new Error("Failed to add product");
+          throw new Error("Failed to update category product");
         }
 
         return res.data;
@@ -110,7 +111,7 @@ export function useAddProductMutation() {
   return useMutation({
     mutationFn: async (newProduct: ProductType) => {
       try {
-        const res = await axios.post('/api/product', newProduct);
+        const res = await axios.post(`/api/product`, newProduct);
 
         if (res.status !== 200) {
           throw new Error("Failed to add product");
@@ -185,7 +186,7 @@ export function useRestockProductMutation(){
         const res = await axios.post(`/api/product/restock`, restockScheme)
       
         if (res.status !== 200) {
-          throw new Error("Failed to delete product");
+          throw new Error("Failed to restock product");
         }
         return res.data;
       } catch(error){
@@ -203,8 +204,21 @@ export function useRestockProductMutation(){
 
 export function useAddOrderMutation(){
   return useMutation({
-    mutationFn: async () => {
-      
-    }
+    mutationFn: async (order: OrderDetails): Promise<OrderResponse> => {
+      try {
+        const res = await axios.post(`/api/order`, order)
+  
+        if(res.status != 200){
+          throw new Error("Failed to create order")
+        }
+
+        return res.data;
+      } catch(error){
+        throw new Error(error instanceof Error ? error.message : "Unknown error");
+      }
+    },
+      onError: (error) => {
+      console.error(error);
+    },
   })
 }

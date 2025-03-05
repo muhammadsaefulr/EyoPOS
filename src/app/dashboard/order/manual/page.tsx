@@ -6,14 +6,16 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useGetAllCategoryProductQuery, useGetAllProductQuery } from "@/lib/reactquery/QueryLists"
+import { useAddOrderMutation, useGetAllCategoryProductQuery, useGetAllProductQuery } from "@/lib/reactquery/QueryLists"
 import { ProductCatgoryData, ProductTypes } from "@/types/ProductTypes"
 import { formatIDR } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
+import { OrderDetails, ProductOrder } from "@/types/OrderProductTypes"
+import { toast } from "@/hooks/use-toast"
 
 type OrderItem = ProductTypes & { quantity: number }
 
-export default function ProductOrder() {
+export default function ManualProductOrder() {
   const [orderDetails, setOrderDetails] = useState({customerName: "", totalAmount: 0})
   const [order, setOrder] = useState<OrderItem[]>([])
   const [productItem, setProductItems] = useState<ProductTypes[]>([])
@@ -22,6 +24,7 @@ export default function ProductOrder() {
 
   const { data: products } = useGetAllProductQuery();
   const { data: category } = useGetAllCategoryProductQuery()
+  const submitOrderMutate = useAddOrderMutation();
 
   useEffect(() => {
     setProductItems(products?.data ?? [])
@@ -84,13 +87,27 @@ export default function ProductOrder() {
   }
   
   const submitOrder = () => {
-    const submitVal = {
+    const orderItemsConv: ProductOrder[] = order.map(item => ({
+      productId: item.id as string,
+      categoryId: item.categoryId,
+      price: item.price,
+      quantity: item.quantity
+  }));
+
+    const submitVal: OrderDetails = {
       customerName: orderDetails.customerName,
-      totalPrice: orderDetails.totalAmount,
-      items: order
+      subtotal: orderDetails.totalAmount,
+      status: "completed",
+      orderItems: orderItemsConv
     }
 
-    console.log("Submit Order YGY", submitVal)
+    console.log("Submit Order", submitVal)
+    submitOrderMutate.mutate(submitVal)
+
+    toast({ 
+      "title": "Berhasil !",
+      "description": `Berhasil membuat order ${submitOrderMutate.data?.data.id}`
+    })
   }
   return (
     <div className="flex flex-col lg:flex-row">
@@ -152,10 +169,11 @@ export default function ProductOrder() {
           <span className="font-semibold">Total:</span>
           <span className="font-semibold">{formatIDR(orderDetails.totalAmount)}</span>
         </div>
-        <div className="flex flex-col gap-y-4">
+        <div className="flex flex-col gap-y-5">
           <div className="">
-            <label className="text-sm ">Input Order Name: </label>
+            <label className="font-semibold text-sm">Input Customer Name: </label>
             <Input type="text" onChange={(e) => setOrderDetails((prev) => ({...prev, customerName: e.target.value }))} placeholder="input order name" />
+            <span className="text-sm  pt text-red-600">{orderDetails.customerName ? null : "Must input customer name"}</span>
           </div>
         <Button onClick={() => submitOrder()} className="w-full" size="lg">
           <BookDashed className="mr-2 h-4 w-4" /> Make invoice and order

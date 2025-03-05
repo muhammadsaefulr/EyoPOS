@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { ProductTypes } from "./ProductTypes"
 
 export type ProductOrder = {
     productId: string,
@@ -13,17 +14,22 @@ export type OrderRequest = {
     items: ProductOrder[]
 }
 
+export type DataOrderResponse = {
+    id: string
+    customerName: string
+    totalPrice: number,
+    status: string
+}
+
 export type OrderResponse = {
     message: string,
-    order_id: string,
-    total_price: number,
-    status: string
+    data: DataOrderResponse
 }
 
 // zod types
 
 export const ProductOrder = z.object({
-    productId: z.string().min(5),
+    productId: z.string().uuid(),
     categoryId: z.string().min(5),
     price: z.number().default(0),
     quantity: z.number().default(0)
@@ -31,32 +37,16 @@ export const ProductOrder = z.object({
 
 export const OrderSchemaZod = z.object({
     customerName: z.string().min(1, "Invalid customer name!"),
-    totalPrice: z.number().default(0),
-    items: z.array(ProductOrder)
+    subtotal: z.number().default(0),
+    notes: z.string().optional(),
+    orderItems: z.array(ProductOrder)
 })
-
-export type Order = {
-    id: string
-    customer: string
-    date: Date
-    status: "pending" | "processing" | "completed" | "cancelled"
-    total: number
-    items: number
-  }
   
-  export type OrderItem = {
-    id: string
-    productName: string
-    quantity: number
-    price: number
-    total: number
-  }
-  
-  export type OrderDetails = Order & {
-    orderItems: OrderItem[]
+  export type OrderDetails =  {
+    customerName: string
+    orderItems: ProductOrder[]
     notes?: string
-    paymentMethod: string
-    tax: number
+    status: "pending" | "processing" | "completed"
     subtotal: number
   }
   

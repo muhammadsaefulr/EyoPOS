@@ -88,6 +88,11 @@ body {
 }
 
 @layer utilities {
+
+  .text-clamps {
+    font-size: clamp(1rem, 1.5vw, 2rem);
+  }  
+
   .scrollbar-hidden {
     scrollbar-width: none; 
   }

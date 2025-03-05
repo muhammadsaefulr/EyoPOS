@@ -11,7 +11,7 @@ export default function CardOverview() {
           <DollarSign className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">Rp 45,231.89</div>
+          <div className="text-clamps font-bold">Rp 45,231.89</div>
           <p className="text-xs text-muted-foreground">Pendapatanmu Bulan Ini</p>
         </CardContent>
       </Card>
@@ -21,7 +21,7 @@ export default function CardOverview() {
           <DollarSign className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">Rp 300,231.89</div>
+          <div className="text-clamps font-bold">Rp 0</div>
           <p className="text-xs text-muted-foreground">Total Modal Dari Restock Bulan Ini</p>
         </CardContent>
       </Card>
@@ -37,12 +37,12 @@ export default function CardOverview() {
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Growth Rate</CardTitle>
+          <CardTitle className="text-sm font-medium">Kategori Terlaris</CardTitle>
           <TrendingUp className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">+15.3%</div>
-          <p className="text-xs text-muted-foreground">Pertumbuhan penjualan Dari Data Bulan Lalu</p>
+          <div className="text-xl font-bold">Sparepart</div>
+          <p className="text-xs text-muted-foreground">Kategori dengan penjualan terbaik hari ini</p>
         </CardContent>
       </Card>
     </div>

@@ -10,6 +10,8 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json()
 
+    console.log(body)
+
     const validatedData = OrderSchemaZod.parse(body)
 
     const newOrder = await db.transaction(async (tx) => {
@@ -19,7 +21,7 @@ export async function POST(req: NextRequest) {
           .values({
             id: generateOrderNumber(), 
             customerName: validatedData.customerName,
-            totalPrice: validatedData.totalPrice,
+            totalPrice: validatedData.subtotal,
           })
           .returning({
             id: orders.id,
@@ -29,7 +31,7 @@ export async function POST(req: NextRequest) {
           });; 
       
         await tx.insert(orderItems).values(
-          validatedData.items.map((item) => ({
+          validatedData.orderItems.map((item) => ({
             orderId: insertOrder.id, 
             productId: item.productId,
             categoryId: item.categoryId,
