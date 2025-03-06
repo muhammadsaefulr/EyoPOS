@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Receipt,
@@ -11,18 +11,18 @@ import {
   ReceiptCent,
   CircleAlert,
   BookCheck,
-} from "lucide-react"
+} from "lucide-react";
 
-import { Home } from "lucide-react"
-import Link from "next/link"
-import { useState } from "react"
-import { Logo } from "./logo"
+import { Home } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { Logo } from "./logo";
 
 export default function Sidebar() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   function handleNavigation() {
-    setIsMobileMenuOpen(false)
+    setIsMobileMenuOpen(false);
   }
 
   function NavItem({
@@ -32,11 +32,11 @@ export default function Sidebar() {
     tagIcon: TagIcon,
     children,
   }: {
-    href: string
-    tag?: string
-    tagIcon?: React.ElementType | null,
-    icon: React.ElementType
-    children: React.ReactNode
+    href: string;
+    tag?: string;
+    tagIcon?: React.ElementType | null;
+    icon: React.ElementType;
+    children: React.ReactNode;
   }) {
     return (
       <Link
@@ -46,9 +46,11 @@ export default function Sidebar() {
       >
         <Icon className="h-4 w-4 mr-3 flex-shrink-0" />
         {children}
-        {tag && TagIcon && <TagIcon alt={tag} className="h-4 w-4 mx-3 flex-shrink-0" />}
+        {tag && TagIcon && (
+          <TagIcon alt={tag} className="h-4 w-4 mx-3 flex-shrink-0" />
+        )}
       </Link>
-    )
+    );
   }
 
   return (
@@ -76,7 +78,7 @@ export default function Sidebar() {
           >
             <div className="flex items-center justify-center gap-3">
               <div className="text-2xl">
-                <Logo/>
+                <Logo />
               </div>
             </div>
           </Link>
@@ -88,7 +90,7 @@ export default function Sidebar() {
                   Overview
                 </div>
                 <div className="space-y-1">
-                  <NavItem href="/dashboard" icon={Home}  tagIcon={null}>
+                  <NavItem href="/dashboard" icon={Home} tagIcon={null}>
                     Dashboard
                   </NavItem>
                 </div>
@@ -102,7 +104,12 @@ export default function Sidebar() {
                   <NavItem href="/dashboard/produk" icon={Package}>
                     Produk Katalog
                   </NavItem>
-                  <NavItem href="/dashboard/warn/next-update" tag="onUpdate" tagIcon={CircleAlert} icon={Package2}>
+                  <NavItem
+                    href="/dashboard/warn/next-update"
+                    tag="onUpdate"
+                    tagIcon={CircleAlert}
+                    icon={Package2}
+                  >
                     Produk Shoppe
                   </NavItem>
                 </div>
@@ -128,7 +135,7 @@ export default function Sidebar() {
                 </div>
                 <div className="space-y-1">
                   <NavItem href="/dashboard/order/manual" icon={BookCheck}>
-                    Manual Order
+                    Cashier
                   </NavItem>
                   <NavItem href="/dashboard/order/listorder" icon={ReceiptCent}>
                     List Order
@@ -169,6 +176,5 @@ export default function Sidebar() {
         />
       )}
     </div>
-  )
+  );
 }
-

@@ -1,10 +1,10 @@
 import { db } from "@/drizzle/db";
-import { orderItems, orders } from "@/drizzle/schema";
+import { orderItems, orders, products } from "@/drizzle/schema";
 import { OrderSchemaZod } from "@/types/OrderProductTypes";
 import { generateOrderNumber } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { aliasedTable, eq } from "drizzle-orm";
+import { aliasedTable, eq, sql } from "drizzle-orm";
 
 export async function POST(req: NextRequest) {
   try {
@@ -38,6 +38,15 @@ export async function POST(req: NextRequest) {
           totalPrice: item.price * item.quantity,
         })),
       );
+
+      validatedData.orderItems.forEach(async (item) => {
+        await tx
+          .update(products)
+          .set({
+            stock: sql`${products.stock} - ${item.quantity}`,
+          })
+          .where(eq(products.id, item.productId));
+      });
 
       return {
         order: insertOrder,

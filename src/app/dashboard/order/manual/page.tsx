@@ -246,7 +246,7 @@ export default function ManualProductOrder() {
             </span>
           </div>
           <Button onClick={() => submitOrder()} className="w-full" size="lg">
-            <BookDashed className="mr-2 h-4 w-4" /> Make invoice and order
+            <ShoppingCart className="mr-2 h-4 w-4" /> Create Order
           </Button>
         </div>
       </div>
