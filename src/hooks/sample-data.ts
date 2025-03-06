@@ -1,45 +1,39 @@
-import type { Order } from "@/types/OrderProductTypes"
+import { Order } from "@/types/OrderProductTypes";
 
 export const orders: Order[] = [
   {
     id: "ORD-001",
-    customer: "John Doe",
-    date: new Date("2025-02-28T14:30:00"),
+    customerName: "John Doe",
+    totalPrice: 12599, 
     status: "completed",
-    total: 125.99,
-    items: 3,
+    createdAt: new Date("2025-02-28T14:30:00"),
   },
   {
     id: "ORD-002",
-    customer: "Jane Smith",
-    date: new Date("2025-03-01T09:15:00"),
+    customerName: "Jane Smith",
+    totalPrice: 8950,
     status: "processing",
-    total: 89.5,
-    items: 2,
+    createdAt: new Date("2025-03-01T09:15:00"),
   },
   {
     id: "ORD-003",
-    customer: "Robert Johnson",
-    date: new Date("2025-03-01T11:45:00"),
+    customerName: "Robert Johnson",
+    totalPrice: 21075,
     status: "pending",
-    total: 210.75,
-    items: 5,
+    createdAt: new Date("2025-03-01T11:45:00"),
   },
   {
     id: "ORD-004",
-    customer: "Emily Davis",
-    date: new Date("2025-02-27T16:20:00"),
+    customerName: "Emily Davis",
+    totalPrice: 4525,
     status: "completed",
-    total: 45.25,
-    items: 1,
+    createdAt: new Date("2025-02-27T16:20:00"),
   },
   {
     id: "ORD-005",
-    customer: "Michael Wilson",
-    date: new Date("2025-03-01T10:30:00"),
+    customerName: "Michael Wilson",
+    totalPrice: 15000,
     status: "cancelled",
-    total: 150.0,
-    items: 4,
+    createdAt: new Date("2025-03-01T10:30:00"),
   },
-]
-
+];

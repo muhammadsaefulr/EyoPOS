@@ -1,35 +1,38 @@
-"use client"
-import { columns } from "@/components/dashboard/product/product-column"
-import { DataTable } from "@/components/dashboard/product/table-product"
-import { ProductCatgoryData, ProductTypes} from "@/types/ProductTypes"
-import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
-import { useEffect, useState } from "react"
-import { ProductDrawer } from "@/components/dashboard/product/product-drawer"
-import { useGetAllCategoryProductQuery, useGetAllProductQuery } from "@/lib/reactquery/QueryLists"
-import { LoadingWithLogo } from "@/components/loading"
+"use client";
+import { productColumns } from "@/components/dashboard/product/product-column";
+import { DataTableProduct } from "@/components/dashboard/product/table-product";
+import { ProductCatgoryData, ProductTypes } from "@/types/ProductTypes";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ProductDrawer } from "@/components/dashboard/product/product-drawer";
+import {
+  useGetAllCategoryProductQuery,
+  useGetAllProductQuery,
+} from "@/lib/reactquery/QueryLists";
+import { LoadingWithLogo } from "@/components/loading";
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<ProductTypes[]>([])
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [products, setProducts] = useState<ProductTypes[]>([]);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const {data: prod, isLoading} = useGetAllProductQuery();
+  const { data: prod, isLoading } = useGetAllProductQuery();
 
   const [catProd, setCatProd] = useState<ProductCatgoryData[]>([]);
-  const {data: categoryProduct} = useGetAllCategoryProductQuery();
-  
+  const { data: categoryProduct } = useGetAllCategoryProductQuery();
+
   useEffect(() => {
-    setCatProd(categoryProduct?.data ?? [])
-  }, [categoryProduct])
+    setCatProd(categoryProduct?.data ?? []);
+  }, [categoryProduct]);
 
   useEffect(() => {
     setProducts(prod?.data ?? []);
-  }, [prod])
+  }, [prod]);
 
   // console.log(prod)
 
-  if(isLoading){
-    return <LoadingWithLogo/>
+  if (isLoading) {
+    return <LoadingWithLogo />;
   }
 
   return (
@@ -46,14 +49,17 @@ export default function ProductsPage() {
           Add Product
         </Button>
       </div>
-      <DataTable columns={columns} category={catProd} data={products ?? []} />
-      <ProductDrawer 
+      <DataTableProduct
+        columns={productColumns}
+        category={catProd}
+        data={products ?? []}
+      />
+      <ProductDrawer
         isOpen={isDrawerOpen}
         onClose={() => {
-          setIsDrawerOpen(false)
+          setIsDrawerOpen(false);
         }}
       />
     </div>
-  )
+  );
 }
-

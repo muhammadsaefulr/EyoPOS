@@ -1,8 +1,14 @@
-import { ProductCategoryResp, ProductCatgoryData, ProductSchemaZod, ProductTypeRes, RestockTypes} from "@/types/ProductTypes";
+import {
+  ProductCategoryResp,
+  ProductCatgoryData,
+  ProductSchemaZod,
+  ProductTypeRes,
+  RestockTypes,
+} from "@/types/ProductTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import axios from "axios";
-import { OrderDetails, OrderResponse } from "@/types/OrderProductTypes";
+import { OrderDetails, OrderResponse, Order } from "@/types/OrderProductTypes";
 
 export type ProductType = z.infer<typeof ProductSchemaZod>;
 
@@ -15,79 +21,92 @@ export function useGetAllCategoryProductQuery() {
         if (!res.ok) throw new Error("Failed to fetch categories");
         return res.json();
       } catch (error) {
-        throw new Error(error instanceof Error ? error.message : "Unknown error");
+        throw new Error(
+          error instanceof Error ? error.message : "Unknown error",
+        );
       }
     },
   });
 }
 
-export function useAddCategoryProductMutation(){
+export function useAddCategoryProductMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (category: ProductCatgoryData) => {
       try {
-        const res = await axios.post(`/api/product/category`, category)  
+        const res = await axios.post(`/api/product/category`, category);
         if (res.status !== 200) {
           throw new Error("Failed to add category product");
         }
 
-        return res.data;     
-      } catch(error){
-        throw new Error(error instanceof Error ? error.message : "Unknown error");
+        return res.data;
+      } catch (error) {
+        throw new Error(
+          error instanceof Error ? error.message : "Unknown error",
+        );
       }
     },
-    
-    
+
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["getAllCategoryProduct"]})
-    }
-  })
+      queryClient.invalidateQueries({ queryKey: ["getAllCategoryProduct"] });
+    },
+  });
 }
 
-export function useUpdateCategoryProductMutation(){
+export function useUpdateCategoryProductMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({paramId, category}: {paramId: string, category: ProductCatgoryData}) => {
+    mutationFn: async ({
+      paramId,
+      category,
+    }: {
+      paramId: string;
+      category: ProductCatgoryData;
+    }) => {
       try {
-        const res = await axios.put(`/api/product/category/${paramId}`, category)
+        const res = await axios.put(
+          `/api/product/category/${paramId}`,
+          category,
+        );
 
         if (res.status !== 200) {
           throw new Error("Failed to update category product");
         }
 
         return res.data;
-      } catch (error){
-        throw new Error(error instanceof Error ? error.message : "Unknown error");
+      } catch (error) {
+        throw new Error(
+          error instanceof Error ? error.message : "Unknown error",
+        );
       }
     },
-    
+
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["getAllCategoryProduct"]})
-    }
-  })
+      queryClient.invalidateQueries({ queryKey: ["getAllCategoryProduct"] });
+    },
+  });
 }
 
-export function useDeleteCategoryProductByIdMutation(){
+export function useDeleteCategoryProductByIdMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (paramId: string) => {
-      const res = await axios.delete(`/api/product/category/${paramId}`)
+      const res = await axios.delete(`/api/product/category/${paramId}`);
 
-      if(res.status != 200){
-        throw new Error("Failed to delete category product")
+      if (res.status != 200) {
+        throw new Error("Failed to delete category product");
       }
 
-      return res.data
+      return res.data;
     },
-    
+
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["getAllCategoryProduct"]})
-      
-    }
-  })
+      queryClient.invalidateQueries({ queryKey: ["getAllCategoryProduct"] });
+    },
+  });
 }
 
 export function useGetAllProductQuery() {
@@ -99,7 +118,9 @@ export function useGetAllProductQuery() {
         if (!res.ok) throw new Error("Failed to fetch all products");
         return res.json();
       } catch (error) {
-        throw new Error(error instanceof Error ? error.message : "Unknown error");
+        throw new Error(
+          error instanceof Error ? error.message : "Unknown error",
+        );
       }
     },
   });
@@ -107,7 +128,7 @@ export function useGetAllProductQuery() {
 
 export function useAddProductMutation() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (newProduct: ProductType) => {
       try {
@@ -119,10 +140,12 @@ export function useAddProductMutation() {
 
         return res.data;
       } catch (error) {
-        throw new Error(error instanceof Error ? error.message : "Unknown error");
+        throw new Error(
+          error instanceof Error ? error.message : "Unknown error",
+        );
       }
     },
-    
+
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["getAllProduct"] });
     },
@@ -133,7 +156,13 @@ export function useUpdateProductMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({paramId, product}: {paramId: string, product: ProductType}) => {
+    mutationFn: async ({
+      paramId,
+      product,
+    }: {
+      paramId: string;
+      product: ProductType;
+    }) => {
       try {
         const res = await axios.put(`/api/product/${paramId}`, product);
 
@@ -143,7 +172,9 @@ export function useUpdateProductMutation() {
 
         return res.data;
       } catch (error) {
-        throw new Error(error instanceof Error ? error.message : "Unknown error");
+        throw new Error(
+          error instanceof Error ? error.message : "Unknown error",
+        );
       }
     },
 
@@ -155,7 +186,7 @@ export function useUpdateProductMutation() {
 
 export function useDeleteProductByIdMutation() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (productId: string) => {
       try {
@@ -165,7 +196,9 @@ export function useDeleteProductByIdMutation() {
         }
         return res.data;
       } catch (error) {
-        throw new Error(error instanceof Error ? error.message : "Unknown error");
+        throw new Error(
+          error instanceof Error ? error.message : "Unknown error",
+        );
       }
     },
     onSuccess: () => {
@@ -177,20 +210,22 @@ export function useDeleteProductByIdMutation() {
   });
 }
 
-export function useRestockProductMutation(){
+export function useRestockProductMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (restockScheme: RestockTypes) => {
       try {
-        const res = await axios.post(`/api/product/restock`, restockScheme)
-      
+        const res = await axios.post(`/api/product/restock`, restockScheme);
+
         if (res.status !== 200) {
           throw new Error("Failed to restock product");
         }
         return res.data;
-      } catch(error){
-        throw new Error(error instanceof Error ? error.message : "Unknown error");
+      } catch (error) {
+        throw new Error(
+          error instanceof Error ? error.message : "Unknown error",
+        );
       }
     },
     onSuccess: () => {
@@ -199,26 +234,89 @@ export function useRestockProductMutation(){
     onError: (error) => {
       console.error(error);
     },
-  })
+  });
 }
 
-export function useAddOrderMutation(){
+export function useAddOrderMutation() {
   return useMutation({
     mutationFn: async (order: OrderDetails): Promise<OrderResponse> => {
       try {
-        const res = await axios.post(`/api/order`, order)
-  
-        if(res.status != 200){
-          throw new Error("Failed to create order")
+        const res = await axios.post(`/api/order`, order);
+
+        if (res.status != 200) {
+          throw new Error("Failed to create order");
         }
 
         return res.data;
-      } catch(error){
-        throw new Error(error instanceof Error ? error.message : "Unknown error");
+      } catch (error) {
+        throw new Error(
+          error instanceof Error ? error.message : "Unknown error",
+        );
       }
     },
-      onError: (error) => {
+    onError: (error) => {
       console.error(error);
     },
-  })
+  });
+}
+
+export function useGetAllOrderQuery() {
+  return useQuery({
+    queryKey: ["allOrder"],
+    queryFn: async () => {
+      try {
+        const res = await axios.get(`/api/order`);
+
+        if (res.status != 200) {
+          throw new Error("Failed to fetch all orders");
+        }
+        return res.data;
+      } catch (error) {
+        throw new Error(
+          error instanceof Error ? error.message : "Unknown error",
+        );
+      }
+    },
+  });
+}
+
+export function useGetAllOrderMutation() {
+  return useMutation({
+    mutationFn: async (detailProduct: boolean) => {
+      try {
+        const res = await axios.get(`/api/order?product=${detailProduct}`);
+
+        if (res.status != 200) {
+          throw new Error("Failed to fetch all orders");
+        }
+
+        return res.data;
+      } catch (error) {
+        throw new Error(
+          error instanceof Error ? error.message : "Unknown error",
+        );
+      }
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+}
+
+export function useUpdateOrderMutation() {
+  return useMutation({
+    mutationFn: async (order: Order) => {
+      try {
+        const response = await axios.put(`/api/order/${order.id}`, order);
+        return response.data;
+      } catch (error) {
+        throw new Error(
+          error instanceof Error ? error.message : "Unknown error",
+        );
+      }
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
 }

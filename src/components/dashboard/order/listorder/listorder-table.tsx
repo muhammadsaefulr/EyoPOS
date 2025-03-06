@@ -1,7 +1,8 @@
-"use client"
+"use client";
 
-import { useState, useMemo } from "react"
+import { useState, useMemo } from "react";
 import {
+  ColumnDef,
   type ColumnFiltersState,
   type SortingState,
   type VisibilityState,
@@ -11,11 +12,11 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { ChevronDown, Download, Filter, Plus, Search, Settings, ShoppingCart } from "lucide-react"
+} from "@tanstack/react-table";
+import { ChevronDown, Download, Filter, Search } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,43 +24,47 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BulkActions } from "@/components/dashboard/order/listorder/listorder-bulk-option";
+import type { Order } from "@/types/OrderProductTypes";
+import { useUpdateOrderMutation } from "@/lib/reactquery/QueryLists";
 
-import { columns } from "./listorder-column"
-import { orders as initialOrders } from "@/hooks/sample-data"
-import { BulkActions } from "@/components/dashboard/order/listorder/listorder-bulk-option"
-import type { Order } from "@/types/OrderProductTypes"
+interface DataTableProps<TData extends Order> {
+  columns: ColumnDef<TData, keyof TData>[];
+  data: TData[];
+}
 
-export default function POSOrderManagement() {
-  const [orders, setOrders] = useState(initialOrders)
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = useState({})
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [isAddOrderOpen, setIsAddOrderOpen] = useState(false)
+export default function ListOrderTtaTableOrder<TData extends Order>({
+  columns,
+  data,
+}: DataTableProps<TData>) {
+  // const [orders, setOrders] = useState(initialOrders);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+  const [statusFilter, setStatusFilter] = useState("all");
 
-  // Filter orders based on status tab
+  const listOrderUpdateMutation = useUpdateOrderMutation();
+
   const filteredData = useMemo(() => {
-    return statusFilter === "all" ? orders : orders.filter((order) => order.status === statusFilter)
-  }, [statusFilter, orders])
+    return statusFilter === "all"
+      ? data
+      : data.filter((order) => order.status === statusFilter);
+  }, [statusFilter, data]);
 
   // Set up the table
-  const table = useReactTable({
+  const table = useReactTable<TData>({
     data: filteredData,
     columns,
     onSortingChange: setSorting,
@@ -76,23 +81,37 @@ export default function POSOrderManagement() {
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
-  const selectedOrders = table.getFilteredSelectedRowModel().rows.map((row) => row.original)
+  const selectedOrders = table
+    .getFilteredSelectedRowModel()
+    .rows.map((row) => row.original);
 
-  const handleBulkStatusChange = (selectedOrders: Order[], newStatus: Order["status"]) => {
-    const updatedOrders = orders.map((order) =>
-      selectedOrders.some((selected) => selected.id === order.id) ? { ...order, status: newStatus } : order,
-    )
-    setOrders(updatedOrders)
-    setRowSelection({})
-  }
+  const handleBulkStatusChange = (
+    selectedOrders: Order[],
+    newStatus: Order["status"],
+  ) => {
+    const updatedOrders = selectedOrders
+      .filter((order) => order.status !== newStatus)
+      .map((order) => ({ ...order, status: newStatus }));
+
+    console.log(updatedOrders);
+
+    updatedOrders.forEach((order) => {
+      listOrderUpdateMutation.mutate(order);
+    });
+
+    setRowSelection({});
+  };
 
   const handleBulkDelete = (selectedOrders: Order[]) => {
-    const updatedOrders = orders.filter((order) => !selectedOrders.some((selected) => selected.id === order.id))
-    setOrders(updatedOrders)
-    setRowSelection({})
-  }
+    const updatedOrders = data.filter(
+      (order) => !selectedOrders.some((selected) => selected.id === order.id),
+    );
+    // setOrders(updatedOrders);
+    console.log(updatedOrders);
+    setRowSelection({});
+  };
 
   return (
     <div className="flex w-full flex-col">
@@ -100,11 +119,17 @@ export default function POSOrderManagement() {
         <main className="flex flex-1 flex-col gap-4 p-3 md:gap-8">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-2xl font-bold tracking-tight">Orders</h2>
-              <p className="text-muted-foreground">Manage your point of sale orders and transactions</p>
+              <h2 className="text-2xl font-bold tracking-tight">List Order</h2>
+              <p className="text-muted-foreground">
+                Manage your orders and transactions
+              </p>
             </div>
             <div className="flex items-center">
-              <Button className="bg-primary text-white" variant="outline" size="lg">
+              <Button
+                className="bg-primary text-white"
+                variant="outline"
+                size="lg"
+              >
                 <Download className="mr-2 h-4 w-4" />
                 Export
               </Button>
@@ -116,13 +141,22 @@ export default function POSOrderManagement() {
                 <TabsTrigger value="all" onClick={() => setStatusFilter("all")}>
                   All Orders
                 </TabsTrigger>
-                <TabsTrigger value="pending" onClick={() => setStatusFilter("pending")}>
+                <TabsTrigger
+                  value="pending"
+                  onClick={() => setStatusFilter("pending")}
+                >
                   Pending
                 </TabsTrigger>
-                <TabsTrigger value="processing" onClick={() => setStatusFilter("processing")}>
+                <TabsTrigger
+                  value="processing"
+                  onClick={() => setStatusFilter("processing")}
+                >
                   Processing
                 </TabsTrigger>
-                <TabsTrigger value="completed" onClick={() => setStatusFilter("completed")}>
+                <TabsTrigger
+                  value="completed"
+                  onClick={() => setStatusFilter("completed")}
+                >
                   Completed
                 </TabsTrigger>
               </TabsList>
@@ -133,8 +167,16 @@ export default function POSOrderManagement() {
                     type="search"
                     placeholder="Search orders..."
                     className="w-full pl-8 sm:w-[200px] md:w-[260px]"
-                    value={(table.getColumn("customer")?.getFilterValue() as string) ?? ""}
-                    onChange={(e) => table.getColumn("customer")?.setFilterValue(e.target.value)}
+                    value={
+                      (table
+                        .getColumn("customerName")
+                        ?.getFilterValue() as string) ?? ""
+                    }
+                    onChange={(e) =>
+                      table
+                        .getColumn("customerName")
+                        ?.setFilterValue(e.target.value)
+                    }
                   />
                 </div>
                 <DropdownMenu>
@@ -148,16 +190,32 @@ export default function POSOrderManagement() {
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Filter by</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => table.getColumn("date")?.toggleSorting(false)}>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        table.getColumn("date")?.toggleSorting(false)
+                      }
+                    >
                       Date (Newest)
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => table.getColumn("date")?.toggleSorting(true)}>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        table.getColumn("date")?.toggleSorting(true)
+                      }
+                    >
                       Date (Oldest)
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => table.getColumn("total")?.toggleSorting(false)}>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        table.getColumn("total")?.toggleSorting(false)
+                      }
+                    >
                       Amount (High to Low)
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => table.getColumn("total")?.toggleSorting(true)}>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        table.getColumn("total")?.toggleSorting(true)
+                      }
+                    >
                       Amount (Low to High)
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -172,7 +230,7 @@ export default function POSOrderManagement() {
               </div>
             </div>
             <TabsContent value="all" className="mt-4">
-            <Card className="rounded-sm shadow-none">
+              <Card className="rounded-sm shadow-none">
                 <CardContent className="p-0">
                   <Table>
                     <TableHeader>
@@ -182,7 +240,10 @@ export default function POSOrderManagement() {
                             <TableHead key={header.id}>
                               {header.isPlaceholder
                                 ? null
-                                : flexRender(header.column.columnDef.header, header.getContext())}
+                                : flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext(),
+                                  )}
                             </TableHead>
                           ))}
                         </TableRow>
@@ -191,17 +252,26 @@ export default function POSOrderManagement() {
                     <TableBody>
                       {table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row) => (
-                          <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                          <TableRow
+                            key={row.id}
+                            data-state={row.getIsSelected() && "selected"}
+                          >
                             {row.getVisibleCells().map((cell) => (
                               <TableCell key={cell.id}>
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                {flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext(),
+                                )}
                               </TableCell>
                             ))}
                           </TableRow>
                         ))
                       ) : (
                         <TableRow>
-                          <TableCell colSpan={columns.length} className="h-24 text-center">
+                          <TableCell
+                            colSpan={columns.length}
+                            className="h-24 text-center"
+                          >
                             No orders found.
                           </TableCell>
                         </TableRow>
@@ -211,7 +281,8 @@ export default function POSOrderManagement() {
                 </CardContent>
                 <CardFooter className="flex items-center justify-between border-t p-4">
                   <div className="text-xs text-muted-foreground">
-                    Showing {table.getFilteredRowModel().rows.length} of {orders.length} orders
+                    Showing {table.getFilteredRowModel().rows.length} of{" "}
+                    {data.length} orders
                   </div>
                   <div className="flex items-center gap-2">
                     <Button
@@ -235,7 +306,7 @@ export default function POSOrderManagement() {
               </Card>
             </TabsContent>
             <TabsContent value="pending" className="mt-4">
-            <Card className="rounded-sm shadow-none">
+              <Card className="rounded-sm shadow-none">
                 <CardContent className="p-0">
                   <Table>
                     <TableHeader>
@@ -245,7 +316,10 @@ export default function POSOrderManagement() {
                             <TableHead key={header.id}>
                               {header.isPlaceholder
                                 ? null
-                                : flexRender(header.column.columnDef.header, header.getContext())}
+                                : flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext(),
+                                  )}
                             </TableHead>
                           ))}
                         </TableRow>
@@ -254,17 +328,26 @@ export default function POSOrderManagement() {
                     <TableBody>
                       {table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row) => (
-                          <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                          <TableRow
+                            key={row.id}
+                            data-state={row.getIsSelected() && "selected"}
+                          >
                             {row.getVisibleCells().map((cell) => (
                               <TableCell key={cell.id}>
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                {flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext(),
+                                )}
                               </TableCell>
                             ))}
                           </TableRow>
                         ))
                       ) : (
                         <TableRow>
-                          <TableCell colSpan={columns.length} className="h-24 text-center">
+                          <TableCell
+                            colSpan={columns.length}
+                            className="h-24 text-center"
+                          >
                             No pending orders found.
                           </TableCell>
                         </TableRow>
@@ -275,7 +358,8 @@ export default function POSOrderManagement() {
                 <CardFooter className="flex items-center justify-between border-t p-4">
                   <div className="text-xs text-muted-foreground">
                     Showing {table.getFilteredRowModel().rows.length} of{" "}
-                    {orders.filter((o) => o.status === "pending").length} pending orders
+                    {data.filter((o) => o.status === "pending").length} pending
+                    orders
                   </div>
                   <div className="flex items-center gap-2">
                     <Button
@@ -309,7 +393,10 @@ export default function POSOrderManagement() {
                             <TableHead key={header.id}>
                               {header.isPlaceholder
                                 ? null
-                                : flexRender(header.column.columnDef.header, header.getContext())}
+                                : flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext(),
+                                  )}
                             </TableHead>
                           ))}
                         </TableRow>
@@ -318,17 +405,26 @@ export default function POSOrderManagement() {
                     <TableBody>
                       {table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row) => (
-                          <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                          <TableRow
+                            key={row.id}
+                            data-state={row.getIsSelected() && "selected"}
+                          >
                             {row.getVisibleCells().map((cell) => (
                               <TableCell key={cell.id}>
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                {flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext(),
+                                )}
                               </TableCell>
                             ))}
                           </TableRow>
                         ))
                       ) : (
                         <TableRow>
-                          <TableCell colSpan={columns.length} className="h-24 text-center">
+                          <TableCell
+                            colSpan={columns.length}
+                            className="h-24 text-center"
+                          >
                             No processing orders found.
                           </TableCell>
                         </TableRow>
@@ -339,7 +435,8 @@ export default function POSOrderManagement() {
                 <CardFooter className="flex items-center justify-between border-t p-4">
                   <div className="text-xs text-muted-foreground">
                     Showing {table.getFilteredRowModel().rows.length} of{" "}
-                    {orders.filter((o) => o.status === "processing").length} processing orders
+                    {data.filter((o) => o.status === "processing").length}{" "}
+                    processing orders
                   </div>
                   <div className="flex items-center gap-2">
                     <Button
@@ -363,7 +460,7 @@ export default function POSOrderManagement() {
               </Card>
             </TabsContent>
             <TabsContent value="completed" className="mt-4">
-            <Card className="rounded-sm shadow-none">
+              <Card className="rounded-sm shadow-none">
                 <CardContent className="p-0">
                   <Table>
                     <TableHeader>
@@ -373,7 +470,10 @@ export default function POSOrderManagement() {
                             <TableHead key={header.id}>
                               {header.isPlaceholder
                                 ? null
-                                : flexRender(header.column.columnDef.header, header.getContext())}
+                                : flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext(),
+                                  )}
                             </TableHead>
                           ))}
                         </TableRow>
@@ -382,17 +482,26 @@ export default function POSOrderManagement() {
                     <TableBody>
                       {table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row) => (
-                          <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                          <TableRow
+                            key={row.id}
+                            data-state={row.getIsSelected() && "selected"}
+                          >
                             {row.getVisibleCells().map((cell) => (
                               <TableCell key={cell.id}>
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                {flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext(),
+                                )}
                               </TableCell>
                             ))}
                           </TableRow>
                         ))
                       ) : (
                         <TableRow>
-                          <TableCell colSpan={columns.length} className="h-24 text-center">
+                          <TableCell
+                            colSpan={columns.length}
+                            className="h-24 text-center"
+                          >
                             No completed orders found.
                           </TableCell>
                         </TableRow>
@@ -403,7 +512,8 @@ export default function POSOrderManagement() {
                 <CardFooter className="flex items-center justify-between border-t p-4">
                   <div className="text-xs text-muted-foreground">
                     Showing {table.getFilteredRowModel().rows.length} of{" "}
-                    {orders.filter((o) => o.status === "completed").length} completed orders
+                    {data.filter((o) => o.status === "completed").length}{" "}
+                    completed orders
                   </div>
                   <div className="flex items-center gap-2">
                     <Button
@@ -430,6 +540,5 @@ export default function POSOrderManagement() {
         </main>
       </div>
     </div>
-  )
+  );
 }
-

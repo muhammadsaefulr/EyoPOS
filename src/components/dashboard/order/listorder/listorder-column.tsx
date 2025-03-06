@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import type { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, Clock, MoreHorizontal } from "lucide-react"
-import { format } from "date-fns"
+import type { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, Clock, MoreHorizontal } from "lucide-react";
+import { format } from "date-fns";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Badge } from "@/components/ui/badge"
-import type { Order } from "@/types/OrderProductTypes"
-import { Checkbox } from "@/components/ui/checkbox"
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
+import type { Order } from "@/types/OrderProductTypes";
+import { Checkbox } from "@/components/ui/checkbox";
 
 // Status badge component
 const StatusBadge = ({ status }: { status: string }) => {
@@ -23,36 +23,38 @@ const StatusBadge = ({ status }: { status: string }) => {
     processing: "bg-blue-100 text-blue-800 hover:bg-blue-100",
     pending: "bg-yellow-100 text-yellow-800 hover:bg-yellow-100",
     cancelled: "bg-red-100 text-red-800 hover:bg-red-100",
-  }
+  };
 
-  const style = statusStyles[status as keyof typeof statusStyles] || "bg-gray-100 text-gray-800"
+  const style =
+    statusStyles[status as keyof typeof statusStyles] ||
+    "bg-gray-100 text-gray-800";
 
   return (
     <Badge className={`${style} font-medium`} variant="outline">
       {status.charAt(0).toUpperCase() + status.slice(1)}
     </Badge>
-  )
-}
+  );
+};
 
-export const columns: ColumnDef<Order>[] = [
-   {
-        id: "select",
-        header: ({ table }) => (
-          <Checkbox
-            checked={table.getIsAllPageRowsSelected()}
-            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-            aria-label="Select all"
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={(value) => row.toggleSelected(!!value)}
-            aria-label="Select row"
-          />
-        ),
-        enableSorting: false,
-        enableHiding: false,
+export const listOrderColumns: ColumnDef<Order>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
   },
   {
     accessorKey: "id",
@@ -60,28 +62,31 @@ export const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => <div className="font-medium">{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "customer",
+    accessorKey: "customerName",
     header: "Customer",
-    cell: ({ row }) => <div>{row.getValue("customer")}</div>,
+    cell: ({ row }) => <div>{row.getValue("customerName")}</div>,
   },
   {
-    accessorKey: "date",
+    accessorKey: "createdAt",
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
           Date
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      const date = row.getValue("date") as Date
+      const date = row.getValue("createdAt") as Date;
       return (
         <div className="flex items-center gap-2">
           <Clock className="h-4 w-4 text-muted-foreground" />
           <span>{format(date, "MMM dd, yyyy")}</span>
         </div>
-      )
+      );
     },
     sortingFn: "datetime",
   },
@@ -90,37 +95,35 @@ export const columns: ColumnDef<Order>[] = [
     header: "Status",
     cell: ({ row }) => <StatusBadge status={row.getValue("status")} />,
     filterFn: (row, id, value) => {
-      return value === "all" || row.getValue(id) === value
+      return value === "all" || row.getValue(id) === value;
     },
   },
   {
-    accessorKey: "total",
+    accessorKey: "totalPrice",
     header: ({ column }) => {
       return (
-          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-            Total
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-      )
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Total
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
     },
     cell: ({ row }) => {
-      const amount = Number.parseFloat(row.getValue("total"))
+      const amount = Number.parseFloat(row.getValue("totalPrice"));
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "IDR",
-      }).format(amount)
-      return <div className="font-medium mx-4">{formatted}</div>
+      }).format(amount);
+      return <div className="font-medium mx-4">{formatted}</div>;
     },
-  },
-  {
-    accessorKey: "items",
-    header: () => <div className="text-center">Items</div>,
-    cell: ({ row }) => <div className="text-center">{row.getValue("items")}</div>,
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const order = row.original
+      const order = row.original;
       return (
         <div className="text-right">
           <DropdownMenu>
@@ -133,12 +136,13 @@ export const columns: ColumnDef<Order>[] = [
               <DropdownMenuItem>View details</DropdownMenuItem>
               <DropdownMenuItem>Edit order</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-600">Cancel order</DropdownMenuItem>
+              <DropdownMenuItem className="text-red-600">
+                Cancel order
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      )
+      );
     },
   },
-]
-
+];

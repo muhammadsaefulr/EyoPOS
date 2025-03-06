@@ -1,10 +1,24 @@
-import POSOrderManagement from "@/components/dashboard/order/listorder/listorder-table"
+"use client";
+import { listOrderColumns } from "@/components/dashboard/order/listorder/listorder-column";
+import ListOrderTable from "@/components/dashboard/order/listorder/listorder-table";
+import { useGetAllOrderQuery } from "@/lib/reactquery/QueryLists";
+import { Order } from "@/types/OrderProductTypes";
+import { useEffect, useState } from "react";
 
 export default function POSPage() {
+  const [orders, setOrders] = useState<Order[]>([]);
+
+  const { data: orderData } = useGetAllOrderQuery();
+
+  useEffect(() => {
+    setOrders(orderData?.data ?? []);
+  }, [orderData]);
+
+  console.log(orders);
+
   return (
     <div className="bg-white p-4 rounded-md container mx-auto py-10">
-      <POSOrderManagement />
+      <ListOrderTable columns={listOrderColumns} data={orders} />
     </div>
-)
+  );
 }
-
