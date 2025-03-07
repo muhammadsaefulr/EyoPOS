@@ -9,6 +9,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import axios from "axios";
 import { OrderDetails, OrderResponse, Order } from "@/types/OrderProductTypes";
+import { OrderInvoice, OrderInvoiceResponse } from "@/types/InvoiceTypes";
+import { InvoiceData } from "@/components/dashboard/invoice/invoice-preview";
 
 export type ProductType = z.infer<typeof ProductSchemaZod>;
 
@@ -262,7 +264,7 @@ export function useAddOrderMutation() {
 
 export function useGetAllOrderQuery() {
   return useQuery({
-    queryKey: ["allOrder"],
+    queryKey: ["allOrderQuery"],
     queryFn: async () => {
       try {
         const res = await axios.get(`/api/order`);
@@ -304,11 +306,60 @@ export function useGetAllOrderMutation() {
 }
 
 export function useUpdateOrderMutation() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (order: Order) => {
       try {
         const response = await axios.put(`/api/order/${order.id}`, order);
         return response.data;
+      } catch (error) {
+        throw new Error(
+          error instanceof Error ? error.message : "Unknown error",
+        );
+      }
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["allOrderQuery"] });
+    },
+  });
+}
+
+export function useAddInvoiceMutation() {
+  return useMutation({
+    mutationFn: async (invoice: OrderInvoice) => {
+      try {
+        const res = await axios.post(`/api/invoice`, invoice);
+
+        if (res.status != 200) {
+          throw new Error("Failed to create invoice");
+        }
+
+        return res.data;
+      } catch (error) {
+        throw new Error(
+          error instanceof Error ? error.message : "Unknown error",
+        );
+      }
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+}
+
+export function useGetInvoiceByIdMutation() {
+  return useMutation({
+    mutationFn: async (invoiceId: string): Promise<OrderInvoiceResponse> => {
+      try {
+        const res = await axios.get(`/api/invoice/${invoiceId}`);
+        if (res.status != 200) {
+          throw new Error("Failed to fetch invoice");
+        }
+        return res.data;
       } catch (error) {
         throw new Error(
           error instanceof Error ? error.message : "Unknown error",

@@ -131,6 +131,7 @@ export default function ManualProductOrder() {
   const submitOrder = () => {
     const orderItemsConv: ProductOrder[] = order.map((item) => ({
       productId: item.id as string,
+      productName: item.name,
       categoryId: item.categoryId,
       price: item.price,
       quantity: item.quantity,

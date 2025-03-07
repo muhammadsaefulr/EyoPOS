@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
       await tx.insert(orderItems).values(
         validatedData.orderItems.map((item) => ({
           orderId: insertOrder.id,
+          productName: item.productName,
           productId: item.productId,
           categoryId: item.categoryId,
           pricePerItem: item.price,

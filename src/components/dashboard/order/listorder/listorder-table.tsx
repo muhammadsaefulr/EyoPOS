@@ -192,28 +192,28 @@ export default function ListOrderTtaTableOrder<TData extends Order>({
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() =>
-                        table.getColumn("date")?.toggleSorting(false)
+                        table.getColumn("createdAt")?.toggleSorting(false)
                       }
                     >
                       Date (Newest)
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() =>
-                        table.getColumn("date")?.toggleSorting(true)
+                        table.getColumn("createdAt")?.toggleSorting(true)
                       }
                     >
                       Date (Oldest)
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() =>
-                        table.getColumn("total")?.toggleSorting(false)
+                        table.getColumn("totalPrice")?.toggleSorting(false)
                       }
                     >
                       Amount (High to Low)
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() =>
-                        table.getColumn("total")?.toggleSorting(true)
+                        table.getColumn("totalPrice")?.toggleSorting(true)
                       }
                     >
                       Amount (Low to High)

@@ -14,7 +14,7 @@ export default function InvoiceGenerator() {
     dueDate: "",
     customerName: "",
     customerEmail: "",
-    items: [{ description: "", quantity: 0, price: 0 }],
+    items: [{ productName: "", quantity: 0, price: 0 }],
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +31,7 @@ export default function InvoiceGenerator() {
   const addItem = () => {
     setInvoiceData((prev) => ({
       ...prev,
-      items: [...prev.items, { description: "", quantity: 0, price: 0 }],
+      items: [...prev.items, { productName: "", quantity: 0, price: 0 }],
     }))
   }
 
@@ -104,9 +104,9 @@ export default function InvoiceGenerator() {
             {invoiceData.items.map((item, index) => (
               <div key={index} className="flex space-x-2 mb-2">
                 <Input
-                  placeholder="Description"
-                  value={item.description}
-                  onChange={(e) => handleItemChange(index, "description", e.target.value)}
+                  placeholder="ProductName"
+                  value={item.productName}
+                  onChange={(e) => handleItemChange(index, "productName", e.target.value)}
                 />
                 <Input
                   type="number"

@@ -15,6 +15,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import type { Order } from "@/types/OrderProductTypes";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useAddInvoiceMutation, useUpdateOrderMutation } from "@/lib/reactquery/QueryLists";
+import { useEffect } from "react";
+import { toast } from "@/hooks/use-toast";
 
 // Status badge component
 const StatusBadge = ({ status }: { status: string }) => {
@@ -33,6 +36,58 @@ const StatusBadge = ({ status }: { status: string }) => {
     <Badge className={`${style} font-medium`} variant="outline">
       {status.charAt(0).toUpperCase() + status.slice(1)}
     </Badge>
+  );
+};
+
+const ActionComponents = ({ order }: { order: Order }) => {
+  const updateOrderMutation = useUpdateOrderMutation();
+  const addInvoiceOrderMutation = useAddInvoiceMutation();
+
+  useEffect(() => {
+    if(addInvoiceOrderMutation.isSuccess) {
+      toast({
+        title: "Invoice created !",
+        description: `Invoice ${addInvoiceOrderMutation.data?.data?.id} has been created successfully`,
+      })
+    }
+  }, [addInvoiceOrderMutation.status])
+
+  const updateStatusOrder = () => {
+    order.status = "cancelled";
+    updateOrderMutation.mutate(order);
+  };
+
+  const generateInvoice = () => {
+    addInvoiceOrderMutation.mutate({
+      orderId: order.id,
+      totalAmount: order.totalPrice,
+      status: "unpaid",
+      issuedAt: new Date().toString(),
+      dueDate: new Date(new Date().getTime() + 1000 * 60 * 60 * 24).toString(),
+    });
+  };
+
+  return (
+    <div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem>View details</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => generateInvoice()}>Make Invoice</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => updateStatusOrder()}
+            className="text-red-600"
+          >
+            Cancel order
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 };
 
@@ -126,21 +181,7 @@ export const listOrderColumns: ColumnDef<Order>[] = [
       const order = row.original;
       return (
         <div className="text-right">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>View details</DropdownMenuItem>
-              <DropdownMenuItem>Edit order</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-600">
-                Cancel order
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <ActionComponents order={order} />
         </div>
       );
     },

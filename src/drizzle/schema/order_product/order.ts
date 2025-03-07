@@ -9,12 +9,15 @@ export const orders = pgTable("orders", {
     customerName: varchar("customer_name", { length: 255 }).notNull(),
     totalPrice: integer("total_price").notNull(),
     status: varchar("status", { length: 50 }).notNull().default("pending"),
+    // createdBy: varchar("created_by").notNull().references(() => users.name, { onDelete: "cascade" }),
+    // updatedBy: varchar("updated_by").notNull().references(() => users.name, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").notNull().defaultNow()
   });
 
   export const orderItems = pgTable("order_items", {
     id: serial("id").primaryKey(),
     orderId: varchar("order_id").notNull().references(() => orders.id, { onDelete: "cascade" }),
+    productName: varchar("product_name", { length: 255 }).notNull(),
     productId: varchar("product_id").notNull().references(() => products.id, { onDelete: "cascade" }),
     categoryId: varchar("category_id", { length: 7 }).notNull().references(() => productCategory.id, { onDelete: "cascade" }),
     pricePerItem: integer("price_per_item").notNull(),

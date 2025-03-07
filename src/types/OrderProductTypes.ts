@@ -10,6 +10,7 @@ export type Order = {
 
 export type ProductOrder = {
   productId: string;
+  productName: string;
   categoryId: string;
   price: number;
   quantity: number;
@@ -45,6 +46,7 @@ export type OrderDetails = {
 
 export const ProductOrder = z.object({
   productId: z.string().uuid(),
+  productName: z.string().min(1),
   categoryId: z.string().min(5),
   price: z.number().default(0),
   quantity: z.number().default(0),

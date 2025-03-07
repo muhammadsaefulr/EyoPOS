@@ -1,3 +1,4 @@
+"use client"
 import { Logo } from "@/components/logo";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -8,14 +9,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useGetInvoiceByIdMutation } from "@/lib/reactquery/QueryLists";
+import { formatIDR } from "@/lib/utils";
+// import { useEffect } from "react";
 
 interface InvoiceItem {
-  description: string;
+  productName: string;
   quantity: number;
   price: number;
 }
 
-interface InvoiceData {
+export interface InvoiceData {
   invoiceNumber: string;
   date: string;
   dueDate: string;
@@ -34,24 +38,40 @@ export function InvoicePreview({ invoiceData }: InvoicePreviewProps) {
     0,
   );
 
+  // const getInvoiceByIdMutation = useGetInvoiceByIdMutation();
+
+  // useEffect(() => {
+  //   getInvoiceByIdMutation.mutate(invoiceId as string);
+  // }, [invoiceId]);
+
+  // useEffect(() => {
+  //   console.log(getInvoiceByIdMutation.data);
+  // }, []);
+
   return (
     <Card className="mt-8">
       <CardHeader>
         <CardTitle>
-          <Logo />
+          <Logo className="text-2xl" />
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <div>
-            <h2 className="text-xl font-bold">
-              Invoice #{invoiceData.invoiceNumber}
-            </h2>
-            <p>Date: {invoiceData.date}</p>
-            <p>Due Date: {invoiceData.dueDate}</p>
+          <div className="flex justify-between">
+            <div>
+              <h2 className="text-xl font-bold">
+                Invoice #{invoiceData.invoiceNumber}
+              </h2>
+              <p>Date: {invoiceData.date}</p>
+              <p>Due Date: {invoiceData.dueDate}</p>
+            </div>
+            <div className="">
+              <h2>www.ayopos.com</h2>
+            </div>
           </div>
+
           <div>
-            <h3 className="font-semibold">Customer Details:</h3>
+            <h3 className="font-semibold">Invoice To:</h3>
             <p>{invoiceData.customerName}</p>
             <p>{invoiceData.customerEmail}</p>
           </div>
@@ -67,18 +87,18 @@ export function InvoicePreview({ invoiceData }: InvoicePreviewProps) {
             <TableBody>
               {invoiceData.items.map((item, index) => (
                 <TableRow key={index}>
-                  <TableCell>{item.description}</TableCell>
+                  <TableCell>{item.productName}</TableCell>
                   <TableCell>{item.quantity}</TableCell>
-                  <TableCell>${item.price.toFixed(2)}</TableCell>
+                  <TableCell>{formatIDR(item.price)}</TableCell>
                   <TableCell>
-                    ${(item.quantity * item.price).toFixed(2)}
+                    {formatIDR(item.quantity * item.price)}
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
           <div className="text-right">
-            <p className="font-bold">Total Amount: ${totalAmount.toFixed(2)}</p>
+            <p className="font-bold">Total Amount: {formatIDR(totalAmount)}</p>
           </div>
         </div>
       </CardContent>
