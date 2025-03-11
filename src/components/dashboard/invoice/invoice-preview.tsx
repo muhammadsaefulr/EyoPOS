@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Logo } from "@/components/logo";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -9,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useGetInvoiceByIdMutation } from "@/lib/reactquery/QueryLists";
 import { formatIDR } from "@/lib/utils";
 // import { useEffect } from "react";
 
@@ -24,7 +23,7 @@ export interface InvoiceData {
   date: string;
   dueDate: string;
   customerName: string;
-  customerEmail: string;
+  subtotal: number;
   items: InvoiceItem[];
 }
 
@@ -33,21 +32,6 @@ interface InvoicePreviewProps {
 }
 
 export function InvoicePreview({ invoiceData }: InvoicePreviewProps) {
-  const totalAmount = invoiceData.items.reduce(
-    (sum, item) => sum + item.quantity * item.price,
-    0,
-  );
-
-  // const getInvoiceByIdMutation = useGetInvoiceByIdMutation();
-
-  // useEffect(() => {
-  //   getInvoiceByIdMutation.mutate(invoiceId as string);
-  // }, [invoiceId]);
-
-  // useEffect(() => {
-  //   console.log(getInvoiceByIdMutation.data);
-  // }, []);
-
   return (
     <Card className="mt-8">
       <CardHeader>
@@ -73,7 +57,6 @@ export function InvoicePreview({ invoiceData }: InvoicePreviewProps) {
           <div>
             <h3 className="font-semibold">Invoice To:</h3>
             <p>{invoiceData.customerName}</p>
-            <p>{invoiceData.customerEmail}</p>
           </div>
           <Table>
             <TableHeader>
@@ -90,15 +73,15 @@ export function InvoicePreview({ invoiceData }: InvoicePreviewProps) {
                   <TableCell>{item.productName}</TableCell>
                   <TableCell>{item.quantity}</TableCell>
                   <TableCell>{formatIDR(item.price)}</TableCell>
-                  <TableCell>
-                    {formatIDR(item.quantity * item.price)}
-                  </TableCell>
+                  <TableCell>{formatIDR(item.quantity * item.price)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
           <div className="text-right">
-            <p className="font-bold">Total Amount: {formatIDR(totalAmount)}</p>
+            <p className="font-bold">
+              Total Amount: {formatIDR(invoiceData.subtotal)}
+            </p>
           </div>
         </div>
       </CardContent>

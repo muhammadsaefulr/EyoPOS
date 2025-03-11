@@ -10,7 +10,6 @@ import { z } from "zod";
 import axios from "axios";
 import { OrderDetails, OrderResponse, Order } from "@/types/OrderProductTypes";
 import { OrderInvoice, OrderInvoiceResponse } from "@/types/InvoiceTypes";
-import { InvoiceData } from "@/components/dashboard/invoice/invoice-preview";
 
 export type ProductType = z.infer<typeof ProductSchemaZod>;
 
@@ -351,23 +350,16 @@ export function useAddInvoiceMutation() {
   });
 }
 
-export function useGetInvoiceByIdMutation() {
-  return useMutation({
-    mutationFn: async (invoiceId: string): Promise<OrderInvoiceResponse> => {
-      try {
-        const res = await axios.get(`/api/invoice/${invoiceId}`);
-        if (res.status != 200) {
-          throw new Error("Failed to fetch invoice");
-        }
-        return res.data;
-      } catch (error) {
-        throw new Error(
-          error instanceof Error ? error.message : "Unknown error",
-        );
+export function useGetInvoiceByIdQuery(invoiceId: string) {
+  return useQuery({
+    queryKey: ["invoiceKey", invoiceId],
+    queryFn: async (): Promise<OrderInvoiceResponse> => {
+      const res = await axios.get(`/api/invoice/${invoiceId}`);
+      if (res.status !== 200) {
+        throw new Error("Failed to fetch invoice");
       }
+      return res.data;
     },
-    onError: (error) => {
-      console.error(error);
-    },
+    enabled: !!invoiceId,
   });
 }

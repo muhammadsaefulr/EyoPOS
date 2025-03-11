@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { OrderDetails, ProductOrder } from "./OrderProductTypes";
+import { OrderDetails } from "./OrderProductTypes";
 
 export type OrderInvoice = {
   id?: string;
@@ -22,9 +22,9 @@ type InvoiceProductItem = {
 };
 
 export type OrderInvoiceResponse = {
-  orderInvoice: OrderInvoice
-  orderInfo: OrderDetails[]
-  orderItem: InvoiceProductItem[]
+  orderInvoice: OrderInvoice;
+  orderInfo: OrderDetails;
+  orderItem: InvoiceProductItem[];
 };
 
 export const OrderInvoiceSchemaZod = z.object({
@@ -33,4 +33,4 @@ export const OrderInvoiceSchemaZod = z.object({
   issuedAt: z.string(),
   dueDate: z.string(),
   status: z.enum(["paid", "unpaid"]),
-})
+});

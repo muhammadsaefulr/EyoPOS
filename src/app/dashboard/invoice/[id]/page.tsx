@@ -1,84 +1,58 @@
-"use client"
-import { InvoiceData, InvoicePreview } from '@/components/dashboard/invoice/invoice-preview'
-import { useGetInvoiceByIdMutation } from '@/lib/reactquery/QueryLists'
-import { useParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+"use client";
+import {
+  InvoiceData,
+  InvoicePreview,
+} from "@/components/dashboard/invoice/invoice-preview";
+import { useGetInvoiceByIdQuery } from "@/lib/reactquery/QueryLists";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 export default function InvoiceDetail() {
-    const params = useParams<{ id: string }>();
-    const [dataInvoice, setDataInvoice] = useState<InvoiceData>({
-        invoiceNumber: "",
-        date: "",
-        dueDate: "",
-        customerName: "",
-        customerEmail: "",
-        items: []
-    });
+  const params = useParams<{ id: string }>();
+  const { data, isLoading } = useGetInvoiceByIdQuery(params.id);
 
-    const useGetInvoiceById = useGetInvoiceByIdMutation();
+  const [dataInvoice, setDataInvoice] = useState<InvoiceData>({
+    invoiceNumber: "",
+    date: "",
+    dueDate: "",
+    customerName: "",
+    subtotal: 0,
+    items: [],
+  });
 
-    // Fetch data saat komponen mount
-    useEffect(() => {
-        if (params.id) {
-            useGetInvoiceById.mutate(params.id, {
-                onSuccess: (data) => {
-                    console.log("Fetched Data:", data);
-                    setDataInvoice({
-                        invoiceNumber: data?.orderInvoice?.id ?? "",
-                        date: data?.orderInvoice?.issuedAt ?? "",
-                        dueDate: data?.orderInvoice?.dueDate ?? "",
-                        customerName: data?.orderInfo?.length ? data.orderInfo[0].customerName : "",
-                        customerEmail: "",
-                        items: data?.orderItem?.map((item) => ({
-                            productName: item.productName ?? "",
-                            quantity: item.quantity ?? 0,
-                            price: item.pricePerItem ?? 0
-                        })) ?? []
-                    });
-                }
-            });
-        }
-    }, [params.id]);
-
-    // Debug perubahan state
-    useEffect(() => {
-        console.log("Updated Invoice Data:", dataInvoice);
-    }, [dataInvoice]);
-
-    // Handle loading state
-    if (useGetInvoiceById.isPending) {
-        return (
-            <div className='flex justify-center items-center h-screen'>
-                <div className='text-lg font-bold'>Loading...</div>
-            </div>
-        );
+  useEffect(() => {
+    if (data && data.orderInfo) {
+      setDataInvoice((prev) => ({
+        ...prev,
+        invoiceNumber: data?.orderInvoice?.id ?? "kontol",
+        date: data?.orderInvoice?.issuedAt ?? "",
+        dueDate: data?.orderInvoice?.dueDate ?? "",
+        customerName: data?.orderInfo?.customerName ?? "",
+        subtotal: data?.orderInfo?.subtotal ?? 0,
+        items:
+          data?.orderItem?.map((item) => ({
+            productName: item.productName,
+            price: item.pricePerItem,
+            quantity: item.quantity,
+          })) ?? [],
+      }));
     }
+  }, [data]);
 
-    // Handle error state
-    if (useGetInvoiceById.isError) {
-        return (
-            <div className='flex justify-center items-center h-screen'>
-                <div className='text-lg font-bold text-red-500'>Failed to load invoice</div>
-            </div>
-        );
-    }
+  useEffect(() => {
+    console.log("State updated:", dataInvoice);
+  }, [dataInvoice]);
 
-    // Handle not found state
-    // if (!dataInvoice.customerName) {
-    //     return (
-    //         <div className='flex justify-center items-center h-screen'>
-    //             <div className='flex flex-col items-center'>
-    //                 <div className='text-3xl font-bold'>Invoice not found</div>
-    //                 <div className='text-sm'>The invoice you are looking for does not exist</div>
-    //             </div>
-    //         </div>  
-    //     );
-    // }
-
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="text-lg font-bold">Loading...</div>
+      </div>
+    );
+  }
   return (
     <div>
-        <InvoicePreview invoiceData={dataInvoice}/>
+      <InvoicePreview invoiceData={dataInvoice} />
     </div>
-  )
+  );
 }
-
