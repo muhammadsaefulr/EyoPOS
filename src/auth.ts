@@ -5,7 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "./drizzle/db";
 import { users } from "./drizzle/schema";
-import { eq, isNull } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { registredUser } from "./drizzle/schema/registred_user";
 
 export const authConfig = {

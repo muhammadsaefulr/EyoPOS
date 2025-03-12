@@ -351,15 +351,24 @@ export function useAddInvoiceMutation() {
 }
 
 export function useGetInvoiceByIdQuery(invoiceId: string) {
-  return useQuery({
-    queryKey: ["invoiceKey", invoiceId],
-    queryFn: async (): Promise<OrderInvoiceResponse> => {
-      const res = await axios.get(`/api/invoice/${invoiceId}`);
-      if (res.status !== 200) {
-        throw new Error("Failed to fetch invoice");
-      }
-      return res.data;
+  return useQuery<OrderInvoiceResponse>({
+    queryKey: ["invoiceKey"],
+    queryFn: async () => {
+      try {
+        const res = await axios.get(`/api/invoice/${invoiceId}`);
+        
+        if (res.status !== 200) {
+          throw new Error("Failed to fetch invoice");
+        }
+
+        console.log(res.data.data)
+
+        return res.data
+        } catch (error) {
+          throw new Error(
+            error instanceof Error ? error.message : "Unknown error",
+          );
+        }
     },
-    enabled: !!invoiceId,
   });
 }

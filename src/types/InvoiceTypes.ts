@@ -22,9 +22,11 @@ type InvoiceProductItem = {
 };
 
 export type OrderInvoiceResponse = {
-  orderInvoice: OrderInvoice;
-  orderInfo: OrderDetails;
-  orderItem: InvoiceProductItem[];
+  data: {
+    orderInvoice: OrderInvoice;
+    orderInfo: OrderDetails;
+    orderItem: InvoiceProductItem[];
+  }
 };
 
 export const OrderInvoiceSchemaZod = z.object({

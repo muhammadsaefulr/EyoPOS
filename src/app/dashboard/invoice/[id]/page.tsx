@@ -6,7 +6,7 @@ import {
 import { useGetInvoiceByIdQuery } from "@/lib/reactquery/QueryLists";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-
+  
 export default function InvoiceDetail() {
   const params = useParams<{ id: string }>();
   const { data, isLoading } = useGetInvoiceByIdQuery(params.id);
@@ -21,27 +21,22 @@ export default function InvoiceDetail() {
   });
 
   useEffect(() => {
-    if (data && data.orderInfo) {
-      setDataInvoice((prev) => ({
-        ...prev,
-        invoiceNumber: data?.orderInvoice?.id ?? "kontol",
-        date: data?.orderInvoice?.issuedAt ?? "",
-        dueDate: data?.orderInvoice?.dueDate ?? "",
-        customerName: data?.orderInfo?.customerName ?? "",
-        subtotal: data?.orderInfo?.subtotal ?? 0,
-        items:
-          data?.orderItem?.map((item) => ({
-            productName: item.productName,
-            price: item.pricePerItem,
-            quantity: item.quantity,
-          })) ?? [],
-      }));
-    }
+    if(data){
+        setDataInvoice({
+          invoiceNumber: data?.data.orderInvoice?.id ?? "",
+          date: data?.data?.orderInvoice?.issuedAt ?? "",
+          dueDate: data?.data?.orderInvoice?.dueDate ?? "",
+          subtotal: data?.data?.orderInvoice.totalAmount ?? 0,
+          customerName: data?.data?.orderInfo?.customerName ?? "",
+          items:
+            data?.data.orderItem?.map((item) => ({
+              productName: item.productName,
+              price: item.pricePerItem,
+              quantity: item.quantity,
+            })) ?? [],
+        });
+      }
   }, [data]);
-
-  useEffect(() => {
-    console.log("State updated:", dataInvoice);
-  }, [dataInvoice]);
 
   if (isLoading) {
     return (

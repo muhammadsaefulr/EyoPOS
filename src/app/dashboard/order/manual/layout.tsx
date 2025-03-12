@@ -1,8 +1,6 @@
 "use server"
 
 import { type ReactNode } from "react"
-import { auth } from "@/auth"
-import { redirect } from "next/navigation"
 
 interface LayoutProps {
   children: ReactNode

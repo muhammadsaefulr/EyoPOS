@@ -5,11 +5,7 @@ import Image from "next/image"
 import { Bell, ChevronRight } from "lucide-react"
 import Profile from "@/components/Profile"
 import Link from "next/link"
-
-interface BreadcrumbItem {
-  label: string
-  href?: string
-}
+import { usePathname } from "next/navigation";
 
 interface props{
   username: string
@@ -17,10 +13,14 @@ interface props{
 }
 
 export default function TopNav({username,avatarImage}: props) {
-  const breadcrumbs: BreadcrumbItem[] = [
-    { label: "dashboard", href: "#" },
-    { label: "overview", href: "#" },
-  ]
+
+  const pathname = usePathname();
+
+  const pathSegments = pathname.split("/").filter((segment) => segment);
+  const breadcrumbs = pathSegments.map((segment, index) => ({
+    label: decodeURIComponent(segment),
+    href: "/" + pathSegments.slice(0, index + 1).join("/"),
+  }));
 
   return (
     <nav className="px-3 sm:px-6 flex items-center justify-between bg-white dark:bg-[#0F0F12] dark:border-[#1F1F23] h-full">
