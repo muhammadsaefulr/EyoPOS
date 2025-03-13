@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { BaseApiResponse } from "./BaseApi";
 
 export type Order = {
   id: string;
@@ -29,10 +30,7 @@ export type DataOrderResponse = {
   status: string;
 };
 
-export type OrderResponse = {
-  message: string;
-  data: DataOrderResponse;
-};
+export type OrderResponse = BaseApiResponse<DataOrderResponse>;
 
 export type OrderDetails = {
   customerName: string;

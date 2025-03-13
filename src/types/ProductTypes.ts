@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { BaseApiResponse } from "./BaseApi";
 
 export type ProductTypes = {
   id?: string;
@@ -20,15 +21,9 @@ export type ProductCatgoryData = {
 };
 
 // Type Res API
-export type ProductCategoryResp = {
-  message: string;
-  data: ProductCatgoryData[];
-};
+export type ProductCategoryResp = BaseApiResponse<ProductCatgoryData[]>;
 
-export type ProductTypeRes = {
-  message: string;
-  data: ProductTypes[];
-};
+export type ProductTypeRes = BaseApiResponse<ProductTypes[]>;
 
 // Form And Zod Scheme
 

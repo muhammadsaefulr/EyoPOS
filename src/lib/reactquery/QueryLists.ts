@@ -131,12 +131,12 @@ export function useDeleteCategoryProductByIdMutation() {
   });
 }
 
-export function useGetAllProductQuery() {
+export function useGetAllProductQuery(page: number) {
   return useQuery<ProductTypeRes>({
-    queryKey: ["getAllProduct"],
+    queryKey: ["getAllProduct", page],
     queryFn: async () => {
       try {
-        const res = await fetch(`/api/product`);
+        const res = await fetch(`/api/product?page=${page}`);
         if (!res.ok) throw new Error("Failed to fetch all products");
         return res.json();
       } catch (error) {

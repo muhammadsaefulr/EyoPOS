@@ -42,18 +42,27 @@ import { ProductCatgoryData } from "@/types/ProductTypes";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   category: ProductCatgoryData[];
+  currentPage: number;
+  totalPage: number;
+  setPage: (page:number) => void;
+  refetch: () => void;
   data: TData[];
 }
 
 export function DataTableProduct<TData, TValue>({
   columns,
   data,
+  currentPage,
+  totalPage,
+  setPage,
+  refetch,
   category,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
+
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
@@ -201,15 +210,15 @@ export function DataTableProduct<TData, TValue>({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => {setPage(currentPage - 1); refetch();}}
+            disabled={currentPage === 1}
           >
             Previous
           </Button>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
+            onClick={() => {setPage(currentPage + 1); refetch();}}
             disabled={!table.getCanNextPage()}
           >
             Next

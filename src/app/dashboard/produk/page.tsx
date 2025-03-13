@@ -15,8 +15,9 @@ import { LoadingWithLogo } from "@/components/loading";
 export default function ProductsPage() {
   const [products, setProducts] = useState<ProductTypes[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: prod, isLoading } = useGetAllProductQuery();
+  const { data: prod, isLoading, refetch } = useGetAllProductQuery(currentPage);
 
   const [catProd, setCatProd] = useState<ProductCatgoryData[]>([]);
   const { data: categoryProduct } = useGetAllCategoryProductQuery();
@@ -28,8 +29,6 @@ export default function ProductsPage() {
   useEffect(() => {
     setProducts(prod?.data ?? []);
   }, [prod]);
-
-  // console.log(prod)
 
   if (isLoading) {
     return <LoadingWithLogo />;
@@ -53,6 +52,10 @@ export default function ProductsPage() {
         columns={productColumns}
         category={catProd}
         data={products ?? []}
+        currentPage={prod?.pagination?.currentPage ?? 1}
+        totalPage={prod?.pagination?.totalPages ?? 1}
+        setPage={setCurrentPage}
+        refetch={refetch}
       />
       <ProductDrawer
         isOpen={isDrawerOpen}
