@@ -10,8 +10,29 @@ import { z } from "zod";
 import axios from "axios";
 import { OrderDetails, OrderResponse, Order } from "@/types/OrderProductTypes";
 import { OrderInvoice, OrderInvoiceResponse } from "@/types/InvoiceTypes";
+import { PdfConvertRequest } from "@/types/PdfConvertTypes";
 
 export type ProductType = z.infer<typeof ProductSchemaZod>;
+
+export function usePdfConverter(){
+  return useMutation({
+    mutationFn: async (data: PdfConvertRequest) => {
+      try {
+        const res = await axios.post(`/api/docs/pdf`, data);
+
+        if (res.status !== 200) {
+          throw new Error("Failed to convert pdf");
+        }
+
+        return res.data;
+      } catch (error) {
+        throw new Error(
+          error instanceof Error ? error.message : "Unknown error",
+        );
+      }
+    },
+  });
+}
 
 export function useGetAllCategoryProductQuery() {
   return useQuery<ProductCategoryResp>({

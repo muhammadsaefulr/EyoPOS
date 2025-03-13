@@ -12,6 +12,7 @@ import {
 import { formatIDR } from "@/lib/utils";
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { usePdfConverter } from "@/lib/reactquery/QueryLists";
 
 // import { useEffect } from "react";
 
@@ -37,8 +38,22 @@ interface InvoicePreviewProps {
 export function InvoicePreview({ invoiceData }: InvoicePreviewProps) {
   const contentRef = React.useRef<HTMLDivElement>(null);
 
+  const usePdfConverMutate = usePdfConverter();
+
   const handleDownload = async () => {
-   
+    // usePdfConverMutate.mutate({
+    //   html: contentRef.current?.innerHTML ?? "",
+    //   filename: `Invoice-${invoiceData.invoiceNumber}`,
+    // });
+
+    // const blob = await usePdfConverMutate.data;
+
+    // const url = URL.createObjectURL(blob);
+    // const a = document.createElement("a");
+    // a.href = url;
+    // a.download = `Invoice-${invoiceData.invoiceNumber}.pdf`;
+    // a.click();
+    // window.URL.revokeObjectURL(url);
   };
 
   return (
