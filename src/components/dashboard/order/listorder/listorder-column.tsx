@@ -2,7 +2,6 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Clock, MoreHorizontal } from "lucide-react";
-import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +17,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useAddInvoiceMutation, useUpdateOrderMutation } from "@/lib/reactquery/QueryLists";
 import { useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
+import { formatDateToStr } from "@/lib/datelib/datelib";
 
 // Status badge component
 const StatusBadge = ({ status }: { status: string }) => {
@@ -47,10 +47,19 @@ const ActionComponents = ({ order }: { order: Order }) => {
     if(addInvoiceOrderMutation.isSuccess) {
       toast({
         title: "Invoice created !",
-        description: `Invoice ${addInvoiceOrderMutation.data?.data?.id} has been created successfully`,
+        description: `Invoice ${addInvoiceOrderMutation.data?.data?.id} berhasil dibuat`,
       })
     }
   }, [addInvoiceOrderMutation.status])
+
+  useEffect(() => {
+    if(updateOrderMutation.isSuccess) {
+      toast({
+        title: "Status Order Di Update",
+        description: `Order ${order.id} berhasil diupdate`,
+      })
+    }
+  }, [updateOrderMutation.status])
 
   const updateStatusOrder = () => {
     order.status = "cancelled";
@@ -139,8 +148,8 @@ export const listOrderColumns: ColumnDef<Order>[] = [
       return (
         <div className="flex items-center gap-2">
           <Clock className="h-4 w-4 text-muted-foreground" />
-          <span>{format(date, "MMM dd, yyyy")}</span>
-        </div>
+          <span>{formatDateToStr(date)}</span>
+          </div>
       );
     },
     sortingFn: "datetime",

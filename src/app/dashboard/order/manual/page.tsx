@@ -26,12 +26,15 @@ import { toast } from "@/hooks/use-toast";
 type OrderItem = ProductTypes & { quantity: number };
 
 export default function ManualProductOrder() {
-  const [orderDetails, setOrderDetails] = useState({
+
+  const initialOrderDetails = {
     customerName: "",
     totalAmount: 0,
     status: "completed",
     notes: "",
-  });
+  };
+
+  const [orderDetails, setOrderDetails] = useState(initialOrderDetails)
   const [order, setOrder] = useState<OrderItem[]>([]);
   const [productItem, setProductItems] = useState<ProductTypes[]>([]);
   const [categoryProduct, setCategoryProduct] = useState<ProductCatgoryData[]>(
@@ -41,7 +44,7 @@ export default function ManualProductOrder() {
     ProductTypes[]
   >([]);
 
-  const { data: products } = useGetAllProductQuery();
+  const { data: products } = useGetAllProductQuery({});
   const { data: category } = useGetAllCategoryProductQuery();
   const submitOrderMutate = useAddOrderMutation();
 
@@ -144,8 +147,8 @@ export default function ManualProductOrder() {
       orderItems: orderItemsConv,
     };
 
-    console.log("Submit Order", submitVal);
     submitOrderMutate.mutate(submitVal);
+    setOrderDetails(initialOrderDetails)
   };
   return (
     <div className="flex flex-col lg:flex-row">
@@ -234,6 +237,7 @@ export default function ManualProductOrder() {
             </label>
             <Input
               type="text"
+              value={orderDetails.customerName}
               onChange={(e) =>
                 setOrderDetails((prev) => ({
                   ...prev,

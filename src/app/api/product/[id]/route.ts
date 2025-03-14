@@ -26,7 +26,6 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
             categoryId: validatedData.categoryId,
             price: validatedData.price,  
             distPrice: validatedData.distPrice,  
-            sold: validatedData.sold ?? 0,
             stock: validatedData.stock,
             updatedBy: validatedData.updatedBy ?? "",
             addedBy: validatedData.addedBy ?? "",

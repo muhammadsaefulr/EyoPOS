@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 export default function POSPage() {
   const [orders, setOrders] = useState<Order[]>([]);
 
-  const { data: orderData } = useGetAllOrderQuery();
+  const { data: orderData } = useGetAllOrderQuery({});
 
   useEffect(() => {
     setOrders(orderData?.data ?? []);

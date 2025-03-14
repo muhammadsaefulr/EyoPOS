@@ -22,7 +22,8 @@ export const orders = pgTable("orders", {
     categoryId: varchar("category_id", { length: 7 }).notNull().references(() => productCategory.id, { onDelete: "cascade" }),
     pricePerItem: integer("price_per_item").notNull(),
     quantity: integer("quantity").notNull(),
-    totalPrice: integer("total_price").notNull()
+    totalPrice: integer("total_price").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
   });
 
   export const orderHistory = pgTable("order_history", {

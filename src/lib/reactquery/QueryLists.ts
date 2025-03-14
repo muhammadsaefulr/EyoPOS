@@ -14,6 +14,8 @@ import { PdfConvertRequest } from "@/types/PdfConvertTypes";
 
 export type ProductType = z.infer<typeof ProductSchemaZod>;
 
+type BaseApiRequest = {currentPage?: number | 1, sortBy?: string | "id", sortOrder?: string | "asc", date?: string | "monthly"}
+
 export function usePdfConverter(){
   return useMutation({
     mutationFn: async (data: PdfConvertRequest) => {
@@ -131,12 +133,12 @@ export function useDeleteCategoryProductByIdMutation() {
   });
 }
 
-export function useGetAllProductQuery(page: number) {
+export function useGetAllProductQuery(param: BaseApiRequest) {
   return useQuery<ProductTypeRes>({
-    queryKey: ["getAllProduct", page],
+    queryKey: ["getAllProduct", param.currentPage],
     queryFn: async () => {
       try {
-        const res = await fetch(`/api/product?page=${page}`);
+        const res = await fetch(`/api/product?page=${param.currentPage}&sortBy=${param.sortBy}&sortOrder=${param.sortOrder}`);
         if (!res.ok) throw new Error("Failed to fetch all products");
         return res.json();
       } catch (error) {
@@ -282,12 +284,12 @@ export function useAddOrderMutation() {
   });
 }
 
-export function useGetAllOrderQuery() {
+export function useGetAllOrderQuery(param: BaseApiRequest & {product?: boolean | false}) {
   return useQuery({
     queryKey: ["allOrderQuery"],
-    queryFn: async () => {
+    queryFn: async (): Promise<OrderResponse> => {
       try {
-        const res = await axios.get(`/api/order`);
+        const res = await axios.get(`/api/order?page=${param.currentPage}&sortBy=${param.sortBy}&sortOrder=${param.sortOrder}&product=${param.product}&date=${param.date}`);
 
         if (res.status != 200) {
           throw new Error("Failed to fetch all orders");

@@ -1,15 +1,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { formatDateToStr } from "@/lib/datelib/datelib";
+import { formatIDR } from "@/lib/utils";
+import { ProductOrder } from "@/types/OrderProductTypes";
 
 const recentTransactions = [
-  { id: 1, product: "Coffee", amount: 3.5, date: "2023-04-01" },
-  { id: 2, product: "Sandwich", amount: 5.99, date: "2023-04-01" },
-  { id: 3, product: "Book", amount: 15.0, date: "2023-04-02" },
-  { id: 4, product: "T-shirt", amount: 19.99, date: "2023-04-02" },
-  { id: 5, product: "Headphones", amount: 49.99, date: "2023-04-03" },
+  { id: 1, productName: "Coffee", totalPrice: 3.5, createdAt: "2023-04-01" },
+  { id: 2, productName: "Sandwich", totalPrice: 5.99, createdAt: "2023-04-01" },
+  { id: 3, productName: "Book", totalPrice: 15.0, createdAt: "2023-04-02" },
 ]
 
-export default function RecentTransactions() {
+
+export default function RecentTransactions({ data }: { data: ProductOrder[] }) {
+
+  console.log(data)
+
   return (
     <Card>
       <CardHeader>
@@ -21,15 +26,18 @@ export default function RecentTransactions() {
             <TableRow>
               <TableHead>Product</TableHead>
               <TableHead>Amount</TableHead>
+              <TableHead>IDR</TableHead>
               <TableHead>Date</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {recentTransactions.map((transaction) => (
+            {data.map((transaction) => (
               <TableRow key={transaction.id}>
-                <TableCell>{transaction.product}</TableCell>
-                <TableCell>${transaction.amount.toFixed(2)}</TableCell>
-                <TableCell>{transaction.date}</TableCell>
+                <TableCell>{transaction.productName}</TableCell>
+                <TableCell>{transaction.quantity}</TableCell>
+                <TableCell>{formatIDR(transaction.totalPrice ?? 0)}</TableCell>
+                <TableCell>{formatDateToStr(new Date(transaction.createdAt ?? ""))}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

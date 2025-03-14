@@ -5,16 +5,19 @@ export type Order = {
   id: string;
   customerName: string;
   totalPrice: number;
-  status: "pending" | "completed" | "processing" | "cancelled";
+  status: string | "pending" | "completed" | "processing" | "cancelled";
   createdAt: Date;
 };
 
 export type ProductOrder = {
-  productId: string;
+  id?: number;
+  productId: number;
+  categoryId?: number;
   productName: string;
-  categoryId: string;
-  price: number;
   quantity: number;
+  pricePerItem: number;
+  totalPrice?: number;
+  createdAt?: string;
 };
 
 export type OrderRequest = {
@@ -27,10 +30,12 @@ export type DataOrderResponse = {
   id: string;
   customerName: string;
   totalPrice: number;
+  createdAt: Date;
   status: string;
+  items?: ProductOrder[]
 };
 
-export type OrderResponse = BaseApiResponse<DataOrderResponse>;
+export type OrderResponse = BaseApiResponse<DataOrderResponse[]>;
 
 export type OrderDetails = {
   customerName: string;

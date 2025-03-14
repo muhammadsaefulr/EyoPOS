@@ -11,7 +11,7 @@ export async function PUT(
 ) {
   try {
     const body = await req.json();
-    const { id } = params;
+    const { id } = await params;
 
     const validatedInput = OrderDetailSchemaZod.parse(body);
 

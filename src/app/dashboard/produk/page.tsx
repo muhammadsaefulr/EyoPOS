@@ -17,7 +17,7 @@ export default function ProductsPage() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: prod, isLoading, refetch } = useGetAllProductQuery(currentPage);
+  const { data: prod, isLoading, refetch } = useGetAllProductQuery({currentPage: currentPage, sortBy: "createdAt", sortOrder: "asc"});
 
   const [catProd, setCatProd] = useState<ProductCatgoryData[]>([]);
   const { data: categoryProduct } = useGetAllCategoryProductQuery();

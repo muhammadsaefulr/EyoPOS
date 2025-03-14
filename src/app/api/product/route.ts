@@ -2,16 +2,26 @@ import { db } from "@/drizzle/db";
 import { productCategory, products } from "@/drizzle/schema";
 import { ProductSchemaZod } from "@/types/ProductTypes";
 import { asc, desc, eq, sql } from "drizzle-orm";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-export async function GET(req) {
+export async function GET(req: NextRequest) {
     try {
-        const { searchParams } = new URL(req.url);
+
+        const searchParams  = req.nextUrl.searchParams
         const page = parseInt(searchParams.get("page") || "1", 10);
+        const sortBy = searchParams.get("sortBy") || "createdAt"; 
+        const sortOrder = searchParams.get("sortOrder") === "asc" ? "asc" : "desc"; 
 
         const limit = 10;
         const offset = (page - 1) * limit;
+
+        const validSortFields = [
+            "id", "name", "price", "distPrice", "stock", 
+            "createdAt", "updatedAt", "addedBy", "updatedBy", "categoryId"
+        ];
+
+        const sortColumn = validSortFields.includes(sortBy) ? products[sortBy] : products.createdAt;
 
         const result = await db
             .select({
@@ -29,9 +39,11 @@ export async function GET(req) {
             })
             .from(products)
             .leftJoin(productCategory, eq(products.categoryId, productCategory.id))
+            .orderBy(sortOrder === "asc" ? asc(sortColumn) : desc(sortColumn))
             .limit(limit)
             .offset(offset);
 
+        // Ambil total count untuk pagination
         const totalCount = await db
             .select({ count: sql<number>`COUNT(*)` })
             .from(products)
@@ -56,6 +68,7 @@ export async function GET(req) {
         return NextResponse.json({ message: `Unknown Error 500 ${err}` }, { status: 500 });
     }
 }
+
 
 export async function POST(req: Request) {
     try {
