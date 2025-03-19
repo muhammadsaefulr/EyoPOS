@@ -11,8 +11,8 @@ export type Order = {
 
 export type ProductOrder = {
   id?: number;
-  productId: number;
-  categoryId?: number;
+  productId: string;
+  categoryId?: string;
   productName: string;
   quantity: number;
   pricePerItem: number;
@@ -30,7 +30,7 @@ export type DataOrderResponse = {
   id: string;
   customerName: string;
   totalPrice: number;
-  createdAt: Date;
+  createdAt: Date ;
   status: string;
   items?: ProductOrder[]
 };

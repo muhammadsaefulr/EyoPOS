@@ -4,6 +4,13 @@ function formatDateToStr(date: Date){
    return new Date(date).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })
 }
 
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString)
+  const day = date.getDate()
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+  return `${day} ${monthNames[date.getMonth()]}`
+}
+
 function getStartOfDay(date) {
     const d = new Date(date);
     d.setUTCHours(0, 0, 0, 0);
@@ -29,6 +36,25 @@ function getStartOfDay(date) {
     d.setUTCHours(23, 59, 59, 999);
     return new Date(d.getTime() + timeZoneOffset);
   }
+
+  function getStartOfWeek(date) {
+    const d = new Date(date);
+    const day = d.getUTCDay(); 
+    const diff = day === 0 ? -6 : 1 - day; 
+    d.setUTCDate(d.getUTCDate() + diff);
+    d.setUTCHours(0, 0, 0, 0);
+    return new Date(d.getTime() + timeZoneOffset);
+  }
+
+  function getEndOfWeek(date) {
+      const d = new Date(date);
+      const day = d.getUTCDay(); 
+      const diff = day === 0 ? 0 : 7 - day; 
+
+      d.setUTCDate(d.getUTCDate() + diff);
+      d.setUTCHours(23, 59, 59, 999);
+      return new Date(d.getTime() + timeZoneOffset);
+  }
   
   function getStartOfYear(date) {
     const d = new Date(date);
@@ -44,4 +70,4 @@ function getStartOfDay(date) {
     return new Date(d.getTime() + timeZoneOffset);
   }
 
-  export {formatDateToStr, getStartOfDay, getEndOfDay, getStartOfMonth, getEndOfMonth, getStartOfYear, getEndOfYear}
+  export {formatDateToStr, formatDate, getStartOfDay, getEndOfDay, getStartOfWeek, getEndOfWeek, getStartOfMonth, getEndOfMonth, getStartOfYear, getEndOfYear}

@@ -6,10 +6,10 @@ import { z } from "zod";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  context: {params: { id: string }}
 ) {
   try {
-    const { id } = await params;
+    const { id } = context.params;
 
     const returnInvoice = await db.transaction(async (tx) => {
       const invoice = await tx
@@ -18,7 +18,6 @@ export async function GET(
         .where(eq(invoices.id, id))
         .then((row) => row[0]);
 
-      console.log("debug invoice:", invoice);
 
       if (invoice === undefined) {
         return null;

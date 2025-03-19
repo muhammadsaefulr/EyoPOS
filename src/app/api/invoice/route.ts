@@ -10,8 +10,6 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const validatedData = OrderInvoiceSchemaZod.parse(body);
-
-    console.log(validatedData);
     
     const newInvoice = await db.transaction(async (tx) => {
       const [insertInvoice] = await tx

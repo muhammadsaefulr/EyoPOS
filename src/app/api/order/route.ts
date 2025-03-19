@@ -1,11 +1,11 @@
 import { db } from "@/drizzle/db";
 import { orderItems, orders, products } from "@/drizzle/schema";
-import { OrderSchemaZod } from "@/types/OrderProductTypes";
+import { DataOrderResponse, OrderSchemaZod } from "@/types/OrderProductTypes";
 import { generateOrderNumber } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { asc, between, desc, eq, sql } from "drizzle-orm";
-import { getEndOfDay, getEndOfMonth, getEndOfYear, getStartOfDay, getStartOfMonth, getStartOfYear } from "@/lib/datelib/datelib";
+import { getEndOfDay, getEndOfMonth, getEndOfWeek, getEndOfYear, getStartOfDay, getStartOfMonth, getStartOfWeek, getStartOfYear } from "@/lib/datelib/datelib";
 
 export async function POST(req: NextRequest) {
   try {
@@ -81,13 +81,14 @@ export async function GET(req: NextRequest) {
     const sortBy = searchParams.get("sortBy") || "createdAt";
     const sortOrder = searchParams.get("sortOrder") === "asc" ? asc : desc;
     
-    const validFilterDate = ["yearly", "monthly", "daily"]
+    const validFilterDate = ["yearly","weekly", "monthly", "daily"]
     const filterDate = validFilterDate.includes(searchParams.get("date") || "") ? searchParams.get("date")! : "monthly";
 
     const now = new Date();    
     
     const dateRange = {
       daily: [getStartOfDay(now), getEndOfDay(now)],
+      weekly: [getStartOfWeek(now),getEndOfWeek(now)],
       monthly: [getStartOfMonth(now), getEndOfMonth(now)],
       yearly: [getStartOfYear(now), getEndOfYear(now)],
     };
@@ -137,20 +138,24 @@ export async function GET(req: NextRequest) {
         };
       }
 
-      if (row.itemId) {
-        acc[orderId].items.push({
-          id: row.itemId,
-          productName: row.productName ?? "Unknown Product",
-          productId: row.productId ?? "",
-          pricePerItem: row.pricePerItem ?? 0,
-          quantity: row.quantity ?? 0,
-          totalPrice: row.itemTotalPrice ?? 0,
-          createdAt: row.itemCreatedAt ?? new Date().toISOString(),
-        });
+      if (!acc[orderId].items) {
+        acc[orderId].items = [];
       }
-
+      
+      acc[orderId].items.push({
+        productName: row.productName ?? "Unknown Product",
+        productId: row.productId ?? "",
+        pricePerItem: row.pricePerItem ?? 0,
+        quantity: row.quantity ?? 0,
+        totalPrice: row.itemTotalPrice ?? 0,
+        createdAt:
+          row.itemCreatedAt instanceof Date
+            ? row.itemCreatedAt.toISOString()
+            : row.itemCreatedAt ?? new Date().toISOString(),
+      });
+      
       return acc;
-    }, {} as Record<string, any>);
+    }, {} as Record<string, DataOrderResponse>);
 
     const ordersWithItems = Object.values(groupedOrders);
 
@@ -161,13 +166,15 @@ export async function GET(req: NextRequest) {
 
     const totalPages = Math.ceil(totalCount / limit);
 
+    console.log(totalCount)
+
     return NextResponse.json({
       message: "Berhasil mengambil semua info data order + produk",
       data: ordersWithItems,
       pagination: {
-        currentPage: page ?? 1,
+        currentPage: page || 1,
         totalPages,
-        totalItems: totalCount,
+        totalItems: totalCount || 0,
         perPage: limit,
       },
     });

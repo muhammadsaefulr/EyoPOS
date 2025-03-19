@@ -13,7 +13,7 @@ export default function LowStockProduct() {
       <CardContent>
         {data?.data.filter((item) => item.stock <= 10).length === 0 ? (
           <div className="relative flex justify-center">
-              <p className="text-muted-foreground absolute top-24 lg:relative">
+              <p className="text-muted-foreground py-8 lg:relative">
               Semua stok produk terpenuhi</p>
           </div>   
         ) : (

@@ -95,7 +95,7 @@ export default function ListOrderTtaTableOrder<TData extends Order>({
       .filter((order) => order.status !== newStatus)
       .map((order) => ({ ...order, status: newStatus }));
 
-    console.log(updatedOrders);
+    // console.log(updatedOrders);
 
     updatedOrders.forEach((order) => {
       listOrderUpdateMutation.mutate(order);
@@ -104,14 +104,18 @@ export default function ListOrderTtaTableOrder<TData extends Order>({
     setRowSelection({});
   };
 
-  const handleBulkDelete = (selectedOrders: Order[]) => {
-    const updatedOrders = data.filter(
-      (order) => !selectedOrders.some((selected) => selected.id === order.id),
-    );
-    // setOrders(updatedOrders);
-    console.log(updatedOrders);
-    setRowSelection({});
-  };
+  // const handleBulkDelete = (selectedOrders: Order[]) => {
+  //   // const updatedOrders = data.filter(
+  //   //   (order) => !selectedOrders.some((selected) => selected.id === order.id),
+  //   // );
+  //   // setOrders(updatedOrders);
+  //   // console.log(updatedOrders);
+  //   setRowSelection({});
+  // };
+
+  const handleBulkDelete = () => {
+    
+  }
 
   return (
     <div className="flex w-full flex-col">

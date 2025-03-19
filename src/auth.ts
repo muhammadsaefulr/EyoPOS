@@ -40,7 +40,7 @@ export const authConfig = {
   },
   
   callbacks: {
-    async signIn({ user, account }) {
+    async signIn({ user }) {
 
       // // if (account?.provider === "credentials") {
       //   return true; // Jangan cek database untuk credentials

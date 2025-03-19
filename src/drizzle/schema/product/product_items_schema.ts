@@ -1,4 +1,4 @@
-import { pgTable, text, integer, timestamp, varchar } from "drizzle-orm/pg-core";
+import { pgTable, integer, timestamp, varchar } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { productCategory } from "./product_category_schema";
 

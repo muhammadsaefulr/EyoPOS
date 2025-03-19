@@ -7,11 +7,12 @@ import { z } from "zod";
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  context: {params: {id: string}}
 ) {
   try {
     const body = await req.json();
-    const { id } = await params;
+    
+    const { id } = await context.params;
 
     const validatedInput = OrderDetailSchemaZod.parse(body);
 

@@ -53,7 +53,6 @@ export function DataTableProduct<TData, TValue>({
   columns,
   data,
   currentPage,
-  totalPage,
   setPage,
   refetch,
   category,

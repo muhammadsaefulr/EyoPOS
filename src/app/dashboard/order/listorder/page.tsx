@@ -14,8 +14,6 @@ export default function POSPage() {
     setOrders(orderData?.data ?? []);
   }, [orderData]);
 
-  console.log(orders);
-
   return (
     <div className="bg-white p-4 rounded-md container mx-auto py-10">
       <ListOrderTable columns={listOrderColumns} data={orders} />

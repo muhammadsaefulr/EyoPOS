@@ -113,11 +113,11 @@ export const columns: ColumnDef<ProductTypes>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const member = row.original
+    cell: () => {
+      // const member = row.original
+      // member.id
       // const [isDrawerOpen, setIsDrawerOpen] = useState(false)
       // console.log(member)
-      console.log(member)
 
       return (
         <DropdownMenu>

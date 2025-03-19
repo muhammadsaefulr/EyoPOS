@@ -11,7 +11,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Form, FormField, FormItem, FormControl, FormLabel, FormMessage } from "@/components/ui/form"
 import { useToast } from "@/hooks/use-toast"
 import { useSession } from "next-auth/react"
-import { Session } from "next-auth"
 import { RestockSchema } from "@/types/ProductTypes"
 import { useRestockProductMutation } from "@/lib/reactquery/QueryLists"
 

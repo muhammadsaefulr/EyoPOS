@@ -1,9 +1,8 @@
 import { cn } from '@/lib/utils'
 import React from 'react'
 
-interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export const Logo = ({ className }: LogoProps) => {
+export const Logo = ({ className }: React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div className={cn('flex', className)}>
         <h1 className='font-light text-black'>EYO</h1>

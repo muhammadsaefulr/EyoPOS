@@ -49,6 +49,8 @@ const ActionComponents = ({ order }: { order: Order }) => {
         title: "Invoice created !",
         description: `Invoice ${addInvoiceOrderMutation.data?.data?.id} berhasil dibuat`,
       })
+
+      window.location.href = `/dashboard/invoice/${addInvoiceOrderMutation.data?.data?.id}`
     }
   }, [addInvoiceOrderMutation.status])
 

@@ -71,13 +71,12 @@ export default function ManualProductOrder() {
     if (submitOrderMutate.isSuccess) {
       toast({
         title: "Berhasil !",
-        description: `Berhasil membuat order ${submitOrderMutate.data?.data.id}`,
+        description: `Berhasil membuat order ${submitOrderMutate.data?.data?.id}`,
       });
     }
   }, [submitOrderMutate.status]);
 
   const setFilterProduct = (categoryId: string) => {
-    console.log(categoryId);
     const filtered = productItem.filter(
       (val) => categoryId === "all" || val.categoryId == categoryId,
     );
@@ -135,8 +134,8 @@ export default function ManualProductOrder() {
     const orderItemsConv: ProductOrder[] = order.map((item) => ({
       productId: item.id as string,
       productName: item.name,
-      categoryId: item.categoryId,
-      price: item.price,
+      categoryId: item.categoryId as string,
+      pricePerItem: item.price,
       quantity: item.quantity,
     }));
 

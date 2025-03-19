@@ -4,6 +4,6 @@ export type PdfConvertRequest = {
 };
 
 export type PdfConvertResponse = {
-  message: String;
+  message: string;
   data: unknown
 };
