@@ -71,7 +71,7 @@ export default function ChartPenjualan({ productOrder }: ChartPenjualanProps) {
       <CardContent className="p-4">
         <div className="w-full max-w-full overflow-x-auto scrollbar-hidden" style={{ WebkitOverflowScrolling: "touch" }}>
           <div style={{ width: "800px", minWidth: "800px", height: "350px" }}>
-            <ChartContainer className="w-full h-full" config={chartConfig}>
+            <ChartContainer className="w-full h-full p-3" config={chartConfig}>
               <LineChart data={salesData} margin={{ top: 5, right: 20, bottom: 5, left: 5 }} width={800} height={350}>
                 <CartesianGrid vertical={false} strokeDasharray="3 3" />
                 <XAxis

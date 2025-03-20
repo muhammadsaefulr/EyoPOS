@@ -16,12 +16,12 @@ export async function PUT(
 
     const validatedInput = OrderDetailSchemaZod.parse(body);
 
-    const isExit = db
+    const isExist = db
       .select()
       .from(orders)
       .where(eq(orders.id, id as string));
 
-    if (!isExit) {
+    if (!isExist) {
       return NextResponse.json(
         { message: `Order dengan id ${id} tidak ditemukan !` },
         { status: 404 },

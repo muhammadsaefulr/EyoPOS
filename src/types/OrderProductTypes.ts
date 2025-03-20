@@ -1,12 +1,12 @@
 import { z } from "zod";
-import { BaseApiResponse } from "./BaseApi";
+import { BaseApiResponse } from "./BaseApiTypes";
 
 export type Order = {
   id: string;
   customerName: string;
   totalPrice: number;
   status: string | "pending" | "completed" | "processing" | "cancelled";
-  createdAt: Date;
+  createdAt: Date | string;
 };
 
 export type ProductOrder = {
@@ -30,14 +30,16 @@ export type DataOrderResponse = {
   id: string;
   customerName: string;
   totalPrice: number;
-  createdAt: Date ;
+  createdAt: string;
   status: string;
   items?: ProductOrder[]
 };
 
+export type AddOrderResponse = BaseApiResponse<DataOrderResponse>
 export type OrderResponse = BaseApiResponse<DataOrderResponse[]>;
 
 export type OrderDetails = {
+  id?: string
   customerName: string;
   orderItems: ProductOrder[];
   notes?: string;
@@ -51,7 +53,7 @@ export const ProductOrder = z.object({
   productId: z.string().uuid(),
   productName: z.string().min(1),
   categoryId: z.string().min(5),
-  price: z.number().default(0),
+  pricePerItem: z.number().default(0),
   quantity: z.number().default(0),
 });
 

@@ -22,8 +22,8 @@ export default function RecentTransactions({ data }: { data: ProductOrder[] }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.map((transaction) => (
-              <TableRow key={transaction.id}>
+            {data.map((transaction, keyIdx) => (
+              <TableRow key={keyIdx}>
                 <TableCell>{transaction.productName}</TableCell>
                 <TableCell>{transaction.quantity}</TableCell>
                 <TableCell>{formatIDR(transaction.totalPrice ?? 0)}</TableCell>

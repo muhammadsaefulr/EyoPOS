@@ -42,10 +42,6 @@ export const authConfig = {
   callbacks: {
     async signIn({ user }) {
 
-      // // if (account?.provider === "credentials") {
-      //   return true; // Jangan cek database untuk credentials
-      // // }
-
       if (!user.email) return false;
 
       const isUserRegistred = await db.select()
@@ -77,7 +73,7 @@ export const authConfig = {
     
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const protectedPaths = ["/dashboard"];
+      const protectedPaths = ["/dashboard","/api"];
       const isProtected = protectedPaths.some(path => nextUrl.pathname.startsWith(path));
       
       if (isProtected && !isLoggedIn) {

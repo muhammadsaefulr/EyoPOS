@@ -13,6 +13,8 @@ export async function POST(req: NextRequest) {
 
     const validatedData = OrderSchemaZod.parse(body);
 
+    console.log(validatedData)
+
     const newOrder = await db.transaction(async (tx) => {
       const [insertOrder] = await tx
         .insert(orders)
@@ -35,9 +37,9 @@ export async function POST(req: NextRequest) {
           productName: item.productName,
           productId: item.productId,
           categoryId: item.categoryId,
-          pricePerItem: item.price,
+          pricePerItem: item.pricePerItem,
           quantity: item.quantity,
-          totalPrice: item.price * item.quantity,
+          totalPrice: item.pricePerItem * item.quantity,
         })),
       );
 
@@ -133,7 +135,7 @@ export async function GET(req: NextRequest) {
           customerName: row.customerName ?? "Unknown",
           totalPrice: row.totalPrice ?? 0,
           status: row.status ?? "pending",
-          createdAt: row.createdAt ?? new Date().toISOString(),
+          createdAt: new Date(row.createdAt).toISOString() ?? new Date().toISOString(),
           items: [],
         };
       }

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { BaseApiResponse } from "./BaseApi";
+import { BaseApiResponse } from "./BaseApiTypes";
 
 export type ProductTypes = {
   id?: string;

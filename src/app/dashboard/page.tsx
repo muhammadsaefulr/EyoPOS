@@ -11,33 +11,62 @@ import ChartPenjualan from "@/components/dashboard/overview/ChartPenjualan";
 function Dashboard() {
   const { data: session } = useSession();
 
-  const { data: orderDaily } = useGetAllOrderQuery({ date: "daily" });
-  const { data: orderWeekly } = useGetAllOrderQuery({ date: "weekly" });
-  const { data: orderMonthly } = useGetAllOrderQuery({ date: "monthly"})
+  const { data: orderMonthly } = useGetAllOrderQuery({ date: "monthly"});
+  let dailyOrderPercentage = "";
+  
+  const orderDaily = orderMonthly?.data?.filter(order => {
+    const orderDate = new Date(order.createdAt);
+    return orderDate.toDateString() === new Date().toDateString();
+  });
+
+    const orderWeekly = orderMonthly?.data?.filter(order => {
+      const orderDate = new Date(order.createdAt);
+      const weekStart = new Date(new Date());
+      weekStart.setDate(new Date().getDate() - new Date().getDay()); 
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6); 
+
+      return orderDate >= weekStart && orderDate <= weekEnd;
+  });
 
   const rencentProductOrder: ProductOrder[] =
-  orderDaily?.data?.flatMap(order => order.items ?? []) || [];
+  orderMonthly?.data?.flatMap(order => order.items ?? []) || [];
 
   const allProductMonthly: ProductOrder[] = orderMonthly?.data.flatMap(order => order.items ?? []) || []
 
-  const totalTodayOrders = orderDaily?.data?.length || 0;
-  const totalWeeklyOrders = orderWeekly?.data?.length || 0;
+  const sortedDates = [...new Set(orderMonthly?.data.map(order => order.createdAt?.split("T")[0]))].sort();
 
-  const previousWeeklyOrders = totalWeeklyOrders - totalTodayOrders;
-  const avgPreviousWeekOrders = previousWeeklyOrders > 0 ? previousWeeklyOrders / 6 : 0;
+  console.log("Sorted dates: ",sortedDates)
 
-  const dailyOrderPercentage = previousWeeklyOrders === 0
-  ? 100
-  : parseFloat((((totalTodayOrders - avgPreviousWeekOrders) / avgPreviousWeekOrders) * 100).toFixed(2));
+  const orderCountPerDay = {};
+  orderWeekly?.forEach(order => {
+      const date = order.createdAt.split("T")[0]; 
+      orderCountPerDay[date] = (orderCountPerDay[date] || 0) + 1;
+  });
 
-  const todaySales: number = rencentProductOrder.reduce(
-    (acc, v) => acc + (v?.totalPrice || 0),
-    0
-  );
+  if (sortedDates.length >= 2) {
+    const today = sortedDates[sortedDates.length - 1];
+    const yesterday = sortedDates[sortedDates.length - 2];
+
+    const todayOrders = orderCountPerDay[today];
+    const yesterdayOrders = orderCountPerDay[yesterday];
+
+    const growth = ((todayOrders - yesterdayOrders) / yesterdayOrders) * 100;
+
+    dailyOrderPercentage = growth.toFixed(2)
+  } else {
+    dailyOrderPercentage = "0"
+  }
+  const todaySales: number = orderDaily
+  ?.flatMap(order => order.items ?? [])
+  .reduce((acc, v) => acc + (v.totalPrice || 0), 0) || 0;
+
+  console.log(orderDaily
+    ?.flatMap(order => order.items ?? []))
 
   const overviewDetailProps = {
     todaySales: todaySales,
-    orderToday: rencentProductOrder.length,
+    orderToday: orderDaily?.length || 0,
     dailyOrderPercentage: dailyOrderPercentage,
   };
 

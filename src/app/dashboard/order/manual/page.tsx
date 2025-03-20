@@ -71,7 +71,7 @@ export default function ManualProductOrder() {
     if (submitOrderMutate.isSuccess) {
       toast({
         title: "Berhasil !",
-        description: `Berhasil membuat order ${submitOrderMutate.data?.data?.id}`,
+        description: `Berhasil membuat order ${submitOrderMutate.data?.data.id}`,
       });
     }
   }, [submitOrderMutate.status]);

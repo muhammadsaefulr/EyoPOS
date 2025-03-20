@@ -8,7 +8,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import axios from "axios";
-import { OrderDetails, OrderResponse, Order } from "@/types/OrderProductTypes";
+import { OrderDetails, OrderResponse, Order, AddOrderResponse } from "@/types/OrderProductTypes";
 import { OrderInvoice, OrderInvoiceResponse } from "@/types/InvoiceTypes";
 import { PdfConvertRequest } from "@/types/PdfConvertTypes";
 
@@ -263,7 +263,7 @@ export function useRestockProductMutation() {
 
 export function useAddOrderMutation() {
   return useMutation({
-    mutationFn: async (order: OrderDetails): Promise<OrderResponse> => {
+    mutationFn: async (order: OrderDetails): Promise<AddOrderResponse> => {
       try {
         const res = await axios.post(`/api/order`, order);
 
