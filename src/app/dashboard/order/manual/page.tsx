@@ -70,8 +70,8 @@ export default function ManualProductOrder() {
   useEffect(() => {
     if (submitOrderMutate.isSuccess) {
       toast({
-        title: "Berhasil !",
-        description: `Berhasil membuat order ${submitOrderMutate.data?.data.id}`,
+        title: "Information !",
+        description: `${submitOrderMutate.data.message}`,
       });
     }
   }, [submitOrderMutate.status]);
@@ -147,7 +147,8 @@ export default function ManualProductOrder() {
     };
 
     submitOrderMutate.mutate(submitVal);
-    setOrderDetails(initialOrderDetails)
+    setOrderDetails(initialOrderDetails);
+    setOrder([])
   };
   return (
     <div className="flex flex-col lg:flex-row">

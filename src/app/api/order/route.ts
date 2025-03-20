@@ -4,7 +4,7 @@ import { DataOrderResponse, OrderSchemaZod } from "@/types/OrderProductTypes";
 import { generateOrderNumber } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { asc, between, desc, eq, sql } from "drizzle-orm";
+import { asc, between, desc, eq, inArray, sql } from "drizzle-orm";
 import { getEndOfDay, getEndOfMonth, getEndOfWeek, getEndOfYear, getStartOfDay, getStartOfMonth, getStartOfWeek, getStartOfYear } from "@/lib/datelib/datelib";
 
 export async function POST(req: NextRequest) {
@@ -13,7 +13,29 @@ export async function POST(req: NextRequest) {
 
     const validatedData = OrderSchemaZod.parse(body);
 
-    console.log(validatedData)
+    const productIds = validatedData.orderItems.map((item) => item.productId);
+
+    const productsStock = await db
+    .select({
+      id: products.id,
+      stock: products.stock,
+    })
+    .from(products)
+    .where(inArray(products.id, productIds));
+
+    const stockMap = new Map(productsStock.map((p) => [p.id, p]));
+
+    const outOfStock = validatedData.orderItems.find((item) => {
+      const product = stockMap.get(item.productId);
+      return !product || product.stock < item.quantity;
+    });
+
+    if (outOfStock) {
+      return NextResponse.json(
+        { message: `Stok tidak mencukupi untuk produk ${outOfStock.productName}` },
+        { status: 200 }
+      );
+    }
 
     const newOrder = await db.transaction(async (tx) => {
       const [insertOrder] = await tx
@@ -23,6 +45,7 @@ export async function POST(req: NextRequest) {
           customerName: validatedData.customerName,
           status: validatedData.status,
           totalPrice: validatedData.subtotal,
+          createdAt: new Date()
         })
         .returning({
           id: orders.id,
@@ -40,6 +63,7 @@ export async function POST(req: NextRequest) {
           pricePerItem: item.pricePerItem,
           quantity: item.quantity,
           totalPrice: item.pricePerItem * item.quantity,
+          createdAt: new Date()
         })),
       );
 
@@ -58,7 +82,7 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({
-      message: "Berhasil membuat order",
+      message: `Berhasil membuat order ${newOrder.order.id}`,
       data: newOrder.order,
     });
   } catch (error) {
@@ -96,9 +120,7 @@ export async function GET(req: NextRequest) {
     };
     
     const [startDate, endDate] = dateRange[filterDate];
-    
-    console.log(startDate, endDate);
-
+  
     const validSortFields = ["id", "customer_name", "total_price", "status", "createdAt"];
     const sortColumn = validSortFields.includes(sortBy) ? orders[sortBy] : orders.createdAt;
 

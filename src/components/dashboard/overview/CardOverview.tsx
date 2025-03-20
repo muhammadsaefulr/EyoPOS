@@ -49,9 +49,9 @@ export default function CardOverview({session, detailOverview} :CardOverviewProp
               <div className="flex items-center gap-1">
                 <span className="text-2xl font-bold ">{detailOverview.dailyOrderPercentage}%</span>
                 {parseFloat(detailOverview.dailyOrderPercentage) ? (
-                  <ArrowDownRight className="h-7 w-7 text-red-700"/>
-                ) : (
                   <ArrowUpRight className="h-7 w-7 text-emerald-500" />
+                ) : (
+                  <ArrowDownRight className="h-7 w-7 text-red-700"/>
                 )}
               </div>
               <p className="text-sm">Performance Daily</p>

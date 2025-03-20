@@ -30,9 +30,11 @@ function Dashboard() {
   });
 
   const rencentProductOrder: ProductOrder[] =
-  orderMonthly?.data?.flatMap(order => order.items ?? []) || [];
+  orderDaily?.flatMap(order => order.items ?? []) || [];
 
   const allProductMonthly: ProductOrder[] = orderMonthly?.data.flatMap(order => order.items ?? []) || []
+
+  console.log("Order Monthly",orderMonthly)
 
   const sortedDates = [...new Set(orderMonthly?.data.map(order => order.createdAt?.split("T")[0]))].sort();
 
@@ -52,6 +54,11 @@ function Dashboard() {
     const yesterdayOrders = orderCountPerDay[yesterday];
 
     const growth = ((todayOrders - yesterdayOrders) / yesterdayOrders) * 100;
+
+    console.log('growth', growth)
+
+    console.log(todayOrders)
+    console.log(yesterdayOrders)
 
     dailyOrderPercentage = growth.toFixed(2)
   } else {
