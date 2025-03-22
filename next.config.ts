@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
 };
 
 const withPWA = require("@ducanh2912/next-pwa").default({
-  dest: "public",
+  dest: "public"
 });
 
 export default withPWA(nextConfig);
